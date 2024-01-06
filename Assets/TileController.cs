@@ -6,7 +6,7 @@ public class TileController : MonoBehaviour
 {
     public enum TileType
     {
-        Land, ShallowWater, DeepWater, Water3, Water4, Water5,
+        Land, ShallowWater, DecoyWater, Water3, Water4, Water5,
         Water6, Water7, Water8, Water9, Water10, Water11, Water12, Water13, Water14, Water15,
         Water16, Water17, Water18, Water19
     }

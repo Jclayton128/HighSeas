@@ -84,6 +84,9 @@ public class DestinationHandler : MonoBehaviour
 
     public void CommandMove(int direction)
     {
+        if (!_currentTileHandler) FindCurrentTile();
+
+
         var proposedDestination = _currentTileHandler.GetNeighboringTile(direction);
         if (proposedDestination == null) return;
 

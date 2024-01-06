@@ -55,10 +55,16 @@ public class TileHandler : MonoBehaviour
             _sr.sprite = tileLibRef.GetRandomLandSprite();
             gameObject.layer = Layers.TilesNonTraversable;
         }
+        else if (_tileType == TileController.TileType.DecoyWater)
+        {
+            _sr.sprite = tileLibRef.GetRandomWaterSprite();
+            gameObject.layer = 1;
+        }
     }
 
     public TileHandler GetNeighboringTile(int direction)
     {
+        Debug.Log("received " + direction);
         if (direction <0 || direction > 3)
         {
             Debug.LogWarning("Invalid direction!");
