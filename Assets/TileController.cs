@@ -4,15 +4,33 @@ using UnityEngine;
 
 public class TileController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public enum TileType
     {
-        
+        Land, ShallowWater, DeepWater, Water3, Water4, Water5,
+        Water6, Water7, Water8, Water9, Water10, Water11, Water12, Water13, Water14, Water15,
+        Water16, Water17, Water18, Water19
+    }
+    
+    public static TileController Instance { get; private set; }
+    [SerializeField] TileLibrary _tileLibraryReference;
+
+    //state
+    [SerializeField] TileHandler[] _tileCollection = null;
+
+
+
+    private void Awake()
+    {
+        Instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    [ContextMenu("Force Tile Sprite Update")]
+    public void ForceTilesSpriteFromTileType()
     {
-        
+        foreach (var tile in _tileCollection)
+        {
+            Debug.Log("tick");
+            tile.SetSpriteFromTileType(_tileLibraryReference);
+        }
     }
 }
