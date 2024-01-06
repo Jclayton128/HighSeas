@@ -11,8 +11,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - Tile_Traverse
+  - Tile_NonTraverse
   - 
   - 
   - 
@@ -40,4 +40,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: World
+    uniqueID: 1836939171
+    locked: 0
+  - name: Destination
+    uniqueID: 4243899751
     locked: 0

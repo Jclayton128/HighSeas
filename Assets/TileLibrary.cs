@@ -22,7 +22,6 @@ public class TileLibrary : MonoBehaviour
     [ExecuteInEditMode]
     public Sprite GetRandomWaterSprite()
     {
-        Debug.Log("tock");
         int rand = UnityEngine.Random.Range(0, _waterSprites.Length);
         return _waterSprites[rand];
     }

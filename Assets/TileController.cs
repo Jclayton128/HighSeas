@@ -29,8 +29,7 @@ public class TileController : MonoBehaviour
     {
         foreach (var tile in _tileCollection)
         {
-            Debug.Log("tick");
-            tile.SetSpriteFromTileType(_tileLibraryReference);
+            tile.SetDataFromTileType(_tileLibraryReference);
         }
     }
 }

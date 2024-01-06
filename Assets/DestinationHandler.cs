@@ -1,0 +1,98 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using DG.Tweening;
+using System;
+
+public class DestinationHandler : MonoBehaviour
+{
+    public Action DestinationChanged;
+
+    /// <summary>
+    /// 0: NW, 1: NE, 2: SE, 3: SW
+    /// </summary>
+    [SerializeField] SpriteRenderer[] _cornerSRs = null;
+
+    //State
+    Tween _scaleTween;
+    TileHandler _currentTileHandler;
+    [SerializeField] int _playerIndex = 0;
+
+    private void Start()
+    {
+        SetDataFromPlayerIndex();
+        FindCurrentTile();
+        BeginScalePulsing();
+    }
+
+    public void SetPlayerIndex(int newIndex)
+    {
+        _playerIndex = newIndex;
+        SetDataFromPlayerIndex();
+    }
+
+    private void SetDataFromPlayerIndex()
+    {
+        foreach (var sr in _cornerSRs)
+        {
+            sr.color = PlayerLibrary.Instance.GetPlayerColor(_playerIndex);
+        }
+
+        switch (_playerIndex)
+        {
+            case 0:
+                _cornerSRs[0].sortingOrder = 4;
+                _cornerSRs[1].sortingOrder = 1;
+                _cornerSRs[2].sortingOrder = 3;
+                _cornerSRs[3].sortingOrder = 2;
+                break;
+
+            case 1:
+                _cornerSRs[0].sortingOrder = 2;
+                _cornerSRs[1].sortingOrder = 4;
+                _cornerSRs[2].sortingOrder = 1;
+                _cornerSRs[3].sortingOrder = 3;
+                break;
+
+            case 2:
+                _cornerSRs[0].sortingOrder = 3;
+                _cornerSRs[1].sortingOrder = 2;
+                _cornerSRs[2].sortingOrder = 4;
+                _cornerSRs[3].sortingOrder = 1;
+                break;
+
+            case 3:
+                _cornerSRs[0].sortingOrder = 1;
+                _cornerSRs[1].sortingOrder = 3;
+                _cornerSRs[2].sortingOrder = 2;
+                _cornerSRs[3].sortingOrder = 4;
+                break;
+
+        }
+    }
+
+    private void FindCurrentTile()
+    {
+        var hit_0 = Physics2D.OverlapCircle(transform.position, 0.1f, Layers.LayerMask_AllTiles);
+        if (hit_0) _currentTileHandler= hit_0.GetComponent<TileHandler>();
+    }
+
+    private void BeginScalePulsing()
+    {
+        _scaleTween = transform.DOScale(1.1f, 0.7f).SetLoops(-1, LoopType.Yoyo);
+    }
+
+    public void CommandMove(int direction)
+    {
+        var proposedDestination = _currentTileHandler.GetNeighboringTile(direction);
+        if (proposedDestination == null) return;
+
+        _currentTileHandler = proposedDestination;
+        transform.position = _currentTileHandler.transform.position;
+
+        DestinationChanged?.Invoke();
+    }
+
+
+
+}
