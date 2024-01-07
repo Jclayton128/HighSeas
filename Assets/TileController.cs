@@ -6,9 +6,14 @@ public class TileController : MonoBehaviour
 {
     public enum TileType
     {
-        Land, ShallowWater, DecoyWater, Water3, Water4, Water5,
+        Land, ShallowWater, DecoyWater, Pier, City, Water5,
         Water6, Water7, Water8, Water9, Water10, Water11, Water12, Water13, Water14, Water15,
         Water16, Water17, Water18, Water19
+    }
+
+    public enum TileObject
+    {
+        Nothing, City, Castle, Tree, Rock
     }
     
     public static TileController Instance { get; private set; }
@@ -24,8 +29,13 @@ public class TileController : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        SetAllTileDataFromTileType();
+    }
+
     [ExecuteInEditMode] [ContextMenu("Force Tile Sprite Update")]
-    public void ForceTilesSpriteFromTileType()
+    public void SetAllTileDataFromTileType()
     {
         foreach (var tile in _tileCollection)
         {

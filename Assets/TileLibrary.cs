@@ -9,7 +9,8 @@ public class TileLibrary : MonoBehaviour
     //settings
     [SerializeField] Sprite[] _waterSprites = null;
     [SerializeField] Sprite[] _landSprites = null;
-
+    [SerializeField] Sprite[] _pierSprites = null;
+    [SerializeField] Sprite[] _citySprites = null;
 
 
 
@@ -31,6 +32,18 @@ public class TileLibrary : MonoBehaviour
     {
         int rand = UnityEngine.Random.Range(0, _landSprites.Length);
         return _landSprites[rand];
+
+    }
+    public Sprite GetRandomPierSprite()
+    {
+        int rand = UnityEngine.Random.Range(0, _pierSprites.Length);
+        return _pierSprites[rand];
+
+    }
+    public Sprite GetRandomCitySprite()
+    {
+        int rand = UnityEngine.Random.Range(0, _citySprites.Length);
+        return _citySprites[rand];
 
     }
 }

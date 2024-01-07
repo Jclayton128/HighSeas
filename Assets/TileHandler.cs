@@ -7,16 +7,23 @@ public class TileHandler : MonoBehaviour
 {
 
     //ref
-    SpriteRenderer _sr;
+    [SerializeField] SpriteRenderer _srBase;
+    [SerializeField] SpriteRenderer _srObject;
+
 
 
     //settings
     [SerializeField] Transform[] _searchPoints = null;
     [SerializeField] TileController.TileType _tileType = TileController.TileType.ShallowWater;
+    [SerializeField] TileController.TileObject _tileObject = TileController.TileObject.Nothing;
+    [SerializeField] CityHandler _cityPrefab = null;
+
 
     //state
-    [SerializeField] TileHandler[] _neighbors_All = new TileHandler[4];
-    [SerializeField] TileHandler[] _neighbors_Traversable = new TileHandler[4];
+    TileHandler[] _neighbors_All = new TileHandler[4];
+    public TileHandler[] Neighbors => _neighbors_All;
+    TileHandler[] _neighbors_Traversable = new TileHandler[4];
+    public CityHandler City { get; private set; }
 
 
     private void Start()
@@ -60,21 +67,47 @@ public class TileHandler : MonoBehaviour
     [ExecuteInEditMode]
     public void SetDataFromTileType(TileLibrary tileLibRef)
     {
-        _sr = GetComponent<SpriteRenderer>();
+        SetBaseTile(tileLibRef);
+        SetTileObject(tileLibRef);
+    }
+
+    private void SetBaseTile(TileLibrary tileLibRef)
+    {
+        _srBase = GetComponent<SpriteRenderer>();
         if (_tileType == TileController.TileType.ShallowWater)
         {
-            _sr.sprite = tileLibRef.GetRandomWaterSprite();
+            _srBase.sprite = tileLibRef.GetRandomWaterSprite();
             gameObject.layer = Layers.TilesTraversable;
         }
         else if (_tileType == TileController.TileType.Land)
         {
-            _sr.sprite = tileLibRef.GetRandomLandSprite();
+            _srBase.sprite = tileLibRef.GetRandomLandSprite();
             gameObject.layer = Layers.TilesNonTraversable;
         }
         else if (_tileType == TileController.TileType.DecoyWater)
         {
-            _sr.sprite = tileLibRef.GetRandomWaterSprite();
+            _srBase.sprite = tileLibRef.GetRandomWaterSprite();
             gameObject.layer = 1;
+        }
+        else if (_tileType == TileController.TileType.Pier)
+        {
+            _srBase.sprite = tileLibRef.GetRandomPierSprite();
+            gameObject.layer = Layers.TilesTraversable;
+            gameObject.AddComponent<PierHandler>();
+        }
+    }
+
+    private void SetTileObject(TileLibrary tileLibRef)
+    {
+        if (_tileObject == TileController.TileObject.Nothing)
+        {
+            _srObject.sprite = null;
+        }
+        else if (_tileObject == TileController.TileObject.City)
+        {
+            if (City || GetComponentInChildren<CityHandler>()) return;
+            _srObject.sprite = null;
+            City =Instantiate(_cityPrefab, transform);
         }
     }
 
