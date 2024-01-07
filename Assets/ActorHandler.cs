@@ -25,6 +25,8 @@ public class ActorHandler : MonoBehaviour
         _ui = ui;
 
         _destination.SetPlayerIndex(playerIndex);
+        _ship.SetPlayerIndex(playerIndex);
+        _ship.SetDestination(_destination);
     }
 
     private void OnMove(InputValue value)
@@ -32,20 +34,7 @@ public class ActorHandler : MonoBehaviour
         Vector2 move = value.Get<Vector2>();
         
         int moveDir = ConvertMoveVec2IntoInt(move);
-        //Debug.Log($"{move} becomes {moveDir}");
         _destination.CommandMove(moveDir);
-
-        //Debug.Log($"Move commanded: {move}");
-
-        //if (_playerShipMH)
-        //{
-        //    HandleShipMovement_Move(move);
-        //}
-        //else
-        //{
-        //    PlayerController.Instance.AddPlayerAvatarToRun(_playerInput);
-        //    HandleShipSelectMovement_Move(move);
-        //}
 
     }
 

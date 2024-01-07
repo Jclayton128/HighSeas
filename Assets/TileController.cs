@@ -24,7 +24,7 @@ public class TileController : MonoBehaviour
         Instance = this;
     }
 
-    [ContextMenu("Force Tile Sprite Update")]
+    [ExecuteInEditMode] [ContextMenu("Force Tile Sprite Update")]
     public void ForceTilesSpriteFromTileType()
     {
         foreach (var tile in _tileCollection)

@@ -16,6 +16,7 @@ public class DestinationHandler : MonoBehaviour
     //State
     Tween _scaleTween;
     TileHandler _currentTileHandler;
+    public TileHandler CurrenTile => _currentTileHandler;
     [SerializeField] int _playerIndex = 0;
 
     private void Start()
@@ -79,6 +80,7 @@ public class DestinationHandler : MonoBehaviour
 
     private void BeginScalePulsing()
     {
+        //JUICE TODO: sync these pulses up so that random joining players still pulse together
         _scaleTween = transform.DOScale(1.1f, 0.7f).SetLoops(-1, LoopType.Yoyo);
     }
 
@@ -86,8 +88,7 @@ public class DestinationHandler : MonoBehaviour
     {
         if (!_currentTileHandler) FindCurrentTile();
 
-
-        var proposedDestination = _currentTileHandler.GetNeighboringTile(direction);
+        var proposedDestination = _currentTileHandler.GetNeighboringTile_All(direction);
         if (proposedDestination == null) return;
 
         _currentTileHandler = proposedDestination;
