@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7835257957008476361}
   - component: {fileID: 8611540198078272783}
   - component: {fileID: 7344640939912095387}
+  - component: {fileID: -4063185202072573723}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Untagged
@@ -108,7 +109,12 @@ MonoBehaviour:
   - {fileID: 6780385015791524056}
   - {fileID: 6528486539749411487}
   _tileType: 1
-  _neighbors_Orthogonal:
+  _neighbors_All:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _neighbors_Traversable:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -158,6 +164,33 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.2000924, y: 0.8022823}
   m_EdgeRadius: 0
+--- !u!50 &-4063185202072573723
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 21576693530089511}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &4386923980869497989
 GameObject:
   m_ObjectHideFlags: 0

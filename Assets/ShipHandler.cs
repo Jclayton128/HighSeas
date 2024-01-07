@@ -7,25 +7,28 @@ using System;
 public class ShipHandler : MonoBehaviour
 {
     [SerializeField] SpriteRenderer _baseShipSR = null;
-
+    AIPath _ai;
 
     //state
     float _timeBetweenMoves = 1f;
     float _timeForNextMove = 0;
-    [SerializeField] TileHandler _currentTileHandler;
+    [SerializeField] TileHandler _currentTile;
+    TileHandler _prevTile;
     Seeker _seeker;
     Path _currentPath;
     DestinationHandler _destinationHandler;
 
+
     private void Awake()
     {
         _seeker = GetComponent<Seeker>();
+        _ai = GetComponent<AIPath>();
     }
 
     private void Start()
     {
         _timeForNextMove = Time.time + _timeBetweenMoves;
-        FindCurrentTile();
+        //FindCurrentTile();w
     }
 
     public void SetPlayerIndex(int index)
@@ -36,15 +39,28 @@ public class ShipHandler : MonoBehaviour
     public void SetDestination(DestinationHandler dh)
     {
         _destinationHandler = dh;
+        _destinationHandler.DestinationChanged += HandleUpdatedDestination;
+
+    }
+
+    private void HandleUpdatedDestination(TileHandler newDest)
+    {
+        _ai.destination = newDest.transform.position;
+
     }
 
     private void Update()
     {
-        if (Time.time >= _timeForNextMove)
-        {
-            CalculateDesiredMove();
-            _timeForNextMove = Time.time + _timeBetweenMoves;
-        }
+        //_prevTile = _currentTile;
+        //FindCurrentTile();
+        //if (_currentTile != _prevTile) MovementController.Instance.
+        //        HandleMovement(transform.position);
+
+        //if (Time.time >= _timeForNextMove)
+        //{
+        //    CalculateDesiredMove();
+        //    _timeForNextMove = Time.time + _timeBetweenMoves;
+        //}
     }
 
     private void CalculateDesiredMove()
@@ -52,7 +68,7 @@ public class ShipHandler : MonoBehaviour
         //Generate Path to destination, avoiding land and other ships (impassable)
         //due to the graph already marking those as impassable terrain.
 
-        if (_destinationHandler.CurrenTile == _currentTileHandler) return;
+        if (_destinationHandler.CurrenTile == _currentTile) return;
 
 
         _currentPath =
@@ -62,30 +78,30 @@ public class ShipHandler : MonoBehaviour
 
     private void ExecuteMovementAttempt(Path p)
     {
-        //if (p.error)
-        //{
-        //    Debug.Log(p.errorLog);
-        //}
+        ////if (p.error)
+        ////{
+        ////    Debug.Log(p.errorLog);
+        ////}
 
-        _currentPath = p;
+        //_currentPath = p;
 
-        //Calculate int direction of next move on the Path
-        Vector3 dir = (_currentPath.vectorPath[1] - transform.position).normalized;
+        ////Calculate int direction of next move on the Path
+        //Vector3 dir = (_currentPath.vectorPath[1] - transform.position).normalized;
 
 
-        int dirInt = FindIntDirectionFromNextStepVector(dir);
-        Debug.Log($"{dir} leads to {dirInt}");
-        //Debug.Log("next move should be " + dir);
+        //int dirInt = FindIntDirectionFromNextStepVector(dir);
+        //Debug.Log($"{dir} leads to {dirInt}");
+        ////Debug.Log("next move should be " + dir);
 
-        //Check if movement in desired direction is possible.
-        if (!_currentTileHandler) FindCurrentTile();
-        var proposedDestination = _currentTileHandler.GetNeighboringTile_Traversable(dirInt);
-        if (proposedDestination == null) return;
+        ////Check if movement in desired direction is possible.
+        //if (!_currentTile) FindCurrentTile();
+        //var proposedDestination = _currentTile.GetNeighboringTile_Traversable(dirInt);
+        //if (proposedDestination == null) return;
 
-        //Execute Movement
-        _currentTileHandler = proposedDestination;
-        transform.position = _currentTileHandler.transform.position;
-        MovementController.Instance.HandleMovement();
+        ////Execute Movement
+        //_currentTile = proposedDestination;
+        //transform.position = _currentTile.transform.position;
+        //MovementController.Instance.HandleMovement();
         
     }
 
@@ -100,7 +116,10 @@ public class ShipHandler : MonoBehaviour
 
     private void FindCurrentTile()
     {
-        var hit_0 = Physics2D.OverlapCircle(transform.position, 0.1f, Layers.LayerMask_AllTiles);
-        if (hit_0) _currentTileHandler = hit_0.GetComponent<TileHandler>();
+        Vector3 testPos = transform.position;
+        testPos.y -= 0.2f;
+
+        var hit_0 = Physics2D.OverlapCircle(testPos, 0.1f, Layers.LayerMask_AllTiles);
+        if (hit_0) _currentTile = hit_0.GetComponent<TileHandler>();
     }
 }

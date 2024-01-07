@@ -17,8 +17,15 @@ public class MovementController : MonoBehaviour
         _asp = GetComponent<AstarPath>();
     }
 
-    public void HandleMovement()
+    private void Start()
     {
         _asp.Scan();
+    }
+
+    public void HandleMovement(Vector3 positionToBeUntraversable)
+    {
+        Bounds bounds = new Bounds(positionToBeUntraversable, Vector3.one*2);
+        _asp.UpdateGraphs(bounds);
+        
     }
 }

@@ -6,7 +6,7 @@ using System;
 
 public class DestinationHandler : MonoBehaviour
 {
-    public Action DestinationChanged;
+    public Action<TileHandler> DestinationChanged;
 
     /// <summary>
     /// 0: NW, 1: NE, 2: SE, 3: SW
@@ -94,7 +94,7 @@ public class DestinationHandler : MonoBehaviour
         _currentTileHandler = proposedDestination;
         transform.position = _currentTileHandler.transform.position;
 
-        DestinationChanged?.Invoke();
+        DestinationChanged?.Invoke(proposedDestination);
     }
 
 

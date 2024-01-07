@@ -83,7 +83,7 @@ public class TileHandler : MonoBehaviour
         //Debug.Log("received " + direction);
         if (direction <0 || direction > 3)
         {
-            Debug.LogWarning("Invalid direction!");
+            //Debug.LogWarning("Invalid direction!");
             return null;
         }
         else if (_neighbors_All[direction] != null)
