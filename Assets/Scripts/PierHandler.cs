@@ -93,8 +93,8 @@ public class PierHandler : MonoBehaviour
 
     public void InitiateCargoSale(CargoLibrary.CargoType cargoToSell)
     {
-       _attachedCity.SatisfyDemandByOneCargo(cargoToSell);
-        Debug.Log("chaching!");
+       int profit = _attachedCity.SatisfyDemandByOneCargo(cargoToSell);
+        Debug.Log($"chaching! Gained {profit} coins!");
         _currentShip.RemoveOneCargo(cargoToSell);
         //TODO hook into player corner UI;
         CheckAndInitiateShipTransaction();

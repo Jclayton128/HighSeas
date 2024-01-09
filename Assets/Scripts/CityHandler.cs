@@ -12,17 +12,20 @@ public class CityHandler : MonoBehaviour
 
     [SerializeField] SpriteRenderer _sr = null;
 
+    [SerializeField] RectTransform[] _slots = null;
     [SerializeField] Image[] _tripleProduction = null;
 
     [SerializeField] Image[] _demandIcons = null;
     [SerializeField] Image[] _productionFillRings = null;
+    [SerializeField] Image[] _demandFillRings = null;
+
+
 
     //settings
     float _productionRate = 0.03f;
     int _maxProduction = 3;
     float[] _demandRates = new float[4] { 0,0,0,0 };
     float _demandSatisfactionPerCargo = 0.33f;
-    float _loadRate = 0.2f;
     [SerializeField] float[] _cargoPaymentThresholds = new float[3];
 
 
@@ -47,12 +50,22 @@ public class CityHandler : MonoBehaviour
         _cargoType = CityController.Instance.GetNextCargoType();
         _sr.sprite = TileLibrary.Instance.GetRandomCitySprite();
         AssignDemandSprites();
-        UpdateProductionImages();
+        AssignProductionSprites();
         RandomlyAssignDemandRates();
+
+        UpdateProductionImages();
         UpdateDemandIcons();
         UpdateProductionRings();
     }
 
+    private void AssignProductionSprites()
+    {
+        for (int i =0; i < _tripleProduction.Length; i++)
+        {
+            _tripleProduction[i].sprite = CargoLibrary.Instance.GetCargoSprite((int)_cargoType);
+            _tripleProduction[i].color = CargoLibrary.Instance.GetCargoColor((int)_cargoType);
+        }
+    }
 
     private void AssignDemandSprites()
     {
@@ -60,6 +73,59 @@ public class CityHandler : MonoBehaviour
         {
             _demandIcons[i].sprite = CargoLibrary.Instance.GetCargoSprite(i);
             _demandIcons[i].color = CargoLibrary.Instance.GetCargoColor(i);
+        }
+
+        switch (_cargoType)
+        {
+            case CargoLibrary.CargoType.Cargo0:
+
+                _demandIcons[0].color = Color.clear;
+                _demandFillRings[0].color = Color.clear;
+
+                _demandIcons[1].rectTransform.position = _slots[0].position;
+                _demandIcons[2].rectTransform.position = _slots[1].position;
+                _demandIcons[3].rectTransform.position = _slots[2].position;
+                _demandFillRings[1].rectTransform.position = _slots[0].position;
+                _demandFillRings[2].rectTransform.position = _slots[1].position;
+                _demandFillRings[3].rectTransform.position = _slots[2].position;
+                break;
+
+            case CargoLibrary.CargoType.Cargo1:
+                _demandIcons[1].color = Color.clear;
+                _demandFillRings[1].color = Color.clear;
+
+                _demandIcons[0].rectTransform.position = _slots[0].position;
+                _demandIcons[2].rectTransform.position = _slots[1].position;
+                _demandIcons[3].rectTransform.position = _slots[2].position;
+                _demandFillRings[0].rectTransform.position = _slots[0].position;
+                _demandFillRings[2].rectTransform.position = _slots[1].position;
+                _demandFillRings[3].rectTransform.position = _slots[2].position;
+                break;
+
+            case CargoLibrary.CargoType.Cargo2:
+                _demandIcons[2].color = Color.clear;
+                _demandFillRings[2].color = Color.clear;
+
+                _demandIcons[0].rectTransform.position = _slots[0].position;
+                _demandIcons[1].rectTransform.position = _slots[1].position;
+                _demandIcons[3].rectTransform.position = _slots[2].position;
+                _demandFillRings[0].rectTransform.position = _slots[0].position;
+                _demandFillRings[1].rectTransform.position = _slots[1].position;
+                _demandFillRings[3].rectTransform.position = _slots[2].position;
+                break;
+
+            case CargoLibrary.CargoType.Cargo3:
+                _demandIcons[3].color = Color.clear;
+                _demandFillRings[3].color = Color.clear;
+
+                _demandIcons[0].rectTransform.position = _slots[0].position;
+                _demandIcons[1].rectTransform.position = _slots[1].position;
+                _demandIcons[2].rectTransform.position = _slots[2].position;
+                _demandFillRings[0].rectTransform.position = _slots[0].position;
+                _demandFillRings[1].rectTransform.position = _slots[1].position;
+                _demandFillRings[2].rectTransform.position = _slots[2].position;
+                break;
+
         }
     }
 
@@ -92,7 +158,7 @@ public class CityHandler : MonoBehaviour
 
     private void UpdateLoading()
     {
-        _loadFactor += Time.deltaTime * _loadRate;
+        _loadFactor += Time.deltaTime * BalanceLibrary.Instance.OnloadRate;
 
         _productionFillRings[_productionInStock - 1].fillAmount = 1-_loadFactor;
         _productionFillRings[_productionInStock - 1].color = Color.grey;
@@ -258,13 +324,16 @@ public class CityHandler : MonoBehaviour
         else return false;
     }
 
-    public void SatisfyDemandByOneCargo(CargoLibrary.CargoType cargoType)
+    public int SatisfyDemandByOneCargo(CargoLibrary.CargoType cargoType)
     {
-        if (_demands[(int)cargoType] < _cargoPaymentThresholds[0])
+        int profit = DetermineProfitFromSale(cargoType);
+
+        if (profit == 0)
         {
             Debug.Log("Demand is too low to sell that here!");
-            return;
+            return 0;
         }
+
         _demands[(int)cargoType] -= _demandSatisfactionPerCargo;
         _demands[(int)cargoType] = Mathf.Clamp01(_demands[(int)cargoType]);
         UpdateDemandIcons();
@@ -272,6 +341,33 @@ public class CityHandler : MonoBehaviour
         //JUICE TODO particle effect for cash produced
         //TODO Pay the player who delivered the cargo
 
+        return profit;
+
+    }
+
+    private int DetermineProfitFromSale(CargoLibrary.CargoType cargoType)
+    {
+        if (_demands[(int)cargoType] > _cargoPaymentThresholds[2])
+        {
+            //highest
+            return BalanceLibrary.Instance.HighDemandProfit;
+        }
+        else if (_demands[(int)cargoType] <= _cargoPaymentThresholds[0])
+        {
+            //lowest
+            return 0;
+        }
+        else if (_demands[(int)cargoType] <= _cargoPaymentThresholds[2] &&
+        _demands[(int)cargoType] > _cargoPaymentThresholds[1])
+        {
+            //second highest
+            return BalanceLibrary.Instance.MidDemandProfit;
+        }
+        else
+        {
+            //third highest
+            return BalanceLibrary.Instance.LowDemandProfit;
+        }
     }
 
     public void StartOnload()

@@ -7,7 +7,7 @@ public class CityController : MonoBehaviour
     public static CityController Instance { get; private set; }
 
     //state
-    int _indexer = -1;
+    int _indexer = 0;
 
     private void Awake()
     {
