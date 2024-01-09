@@ -7,7 +7,7 @@ public class CargoLibrary : MonoBehaviour
 
     public static CargoLibrary Instance { get; private set; }
 
-    public enum CargoType { Cargo0, Cargo1, Cargo2, Cargo3 }
+    public enum CargoType { Cargo0, Cargo1, Cargo2, Cargo3, Count }
     [SerializeField] Sprite[] _cargoSprites = null;
     [SerializeField] Color[] _cargoColors = null;
 

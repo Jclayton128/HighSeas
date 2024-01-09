@@ -9,6 +9,10 @@ public class ShipHandler : MonoBehaviour
     [SerializeField] SpriteRenderer _baseShipSR = null;
     AIPath _ai;
 
+    //settings
+    int _maxCargoSlots = 3;
+    int _startingCargoSlots = 3;
+
     //state
     float _timeBetweenMoves = 1f;
     float _timeForNextMove = 0;
@@ -17,12 +21,19 @@ public class ShipHandler : MonoBehaviour
     Seeker _seeker;
     Path _currentPath;
     DestinationHandler _destinationHandler;
+    [SerializeField] List<CargoLibrary.CargoType> _cargoInHold;
+    public List<CargoLibrary.CargoType> CargoInHold => _cargoInHold;
+    bool _hasFreeCargoSpace = true;
+    public bool HasFreeCargoSpace => _hasFreeCargoSpace;
+    int _currentCargoSlots;
 
 
     private void Awake()
     {
+        _currentCargoSlots = _startingCargoSlots;
         _seeker = GetComponent<Seeker>();
         _ai = GetComponent<AIPath>();
+        _cargoInHold = new List<CargoLibrary.CargoType>();
     }
 
     private void Start()
@@ -47,6 +58,32 @@ public class ShipHandler : MonoBehaviour
     {
         _ai.destination = newDest.transform.position;
 
+    }
+
+    public void RemoveOneCargo(CargoLibrary.CargoType cargoRemoved)
+    {
+        if (_cargoInHold.Contains(cargoRemoved))
+        {
+            _cargoInHold.Remove(cargoRemoved);
+        }
+
+        CheckForFreeCargoSpace();
+    }
+
+    public void AddOneCargo(CargoLibrary.CargoType cargoAdded)
+    {
+        if (!HasFreeCargoSpace) return;
+
+        _cargoInHold.Add(cargoAdded);
+        CheckForFreeCargoSpace();
+    }
+    private void CheckForFreeCargoSpace()
+    {
+        if (_cargoInHold.Count < _currentCargoSlots)
+        {
+            _hasFreeCargoSpace = true;
+        }
+        else _hasFreeCargoSpace = false;
     }
 
     private void Update()
