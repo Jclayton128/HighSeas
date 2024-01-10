@@ -63,7 +63,7 @@ public class PierHandler : MonoBehaviour
             if (_attachedCity.CheckIfCityWantsCargo(option))
             {
                 //initiate sell;
-                InitiateCargoSale(option);
+                InitiateCargoOffload(option);
                 return;
             }
         }
@@ -84,32 +84,40 @@ public class PierHandler : MonoBehaviour
         {
             if (ship == _currentShip)
             {
-                _currentShip = null;
+
                 _attachedCity.CancelOnload();
+                _attachedCity.CancelOffLoad();
+                _currentShip = null;
             }
         }
     }
 
 
-    public void InitiateCargoSale(CargoLibrary.CargoType cargoToSell)
+    public void InitiateCargoOffload(CargoLibrary.CargoType cargoToSell)
     {
-       int profit = _attachedCity.SatisfyDemandByOneCargo(cargoToSell);
+        _attachedCity.StartOffLoad(cargoToSell);
+        _attachedCity.CargoOffloadCompleted += HandleCompletedOffload;
+    }
+
+    private void HandleCompletedOffload(CargoLibrary.CargoType cargoSold, int profit)
+    {
         Debug.Log($"chaching! Gained {profit} coins!");
-        _currentShip.RemoveOneCargo(cargoToSell);
+        _currentShip.RemoveOneCargo(cargoSold);
         //TODO hook into player corner UI;
+        _attachedCity.CargoOffloadCompleted -= HandleCompletedOffload;
         CheckAndInitiateShipTransaction();
     }
 
     public void InitiateCargoOnload()
     {
         _attachedCity.StartOnload();
-        _attachedCity.CargoLoadCompleted += HandleCompletedOnload;
+        _attachedCity.CargoOnloadCompleted += HandleCompletedOnload;
     }
 
     private void HandleCompletedOnload(CargoLibrary.CargoType obj)
     {
         _currentShip.AddOneCargo(obj);
-        _attachedCity.CargoLoadCompleted -= HandleCompletedOnload;
+        _attachedCity.CargoOnloadCompleted -= HandleCompletedOnload;
         Debug.Log($"loaded a " + obj);
         //TODO hook into player corner UI;
 

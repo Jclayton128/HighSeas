@@ -7,7 +7,8 @@ using DG.Tweening;
 
 public class CityHandler : MonoBehaviour
 {
-    public Action<CargoLibrary.CargoType> CargoLoadCompleted;
+    public Action<CargoLibrary.CargoType> CargoOnloadCompleted;
+    public Action<CargoLibrary.CargoType, int> CargoOffloadCompleted;
 
 
     [SerializeField] SpriteRenderer _sr = null;
@@ -25,7 +26,6 @@ public class CityHandler : MonoBehaviour
     float _productionRate = 0.03f;
     int _maxProduction = 3;
     float[] _demandRates = new float[4] { 0,0,0,0 };
-    float _demandSatisfactionPerCargo = 0.33f;
     [SerializeField] float[] _cargoPaymentThresholds = new float[3];
 
 
@@ -41,8 +41,13 @@ public class CityHandler : MonoBehaviour
     bool[] _isBuzzing = new bool[4] { false,false,false, false };
     float _timeSinceLastUpdate;
 
-    [SerializeField] bool _isLoadingProduct = false;
-    [SerializeField] float _loadFactor = 0;
+    bool _isLoadingProduct = false;
+    float _loadFactor = 0;
+
+    [SerializeField] bool _isOffloadingProduct = false;
+    [SerializeField] float _offloadFactor = 0;
+    [SerializeField] CargoLibrary.CargoType _cargoBeingOffloaded;
+
 
 
     void Start()
@@ -127,6 +132,11 @@ public class CityHandler : MonoBehaviour
                 break;
 
         }
+
+        for (int i = 0; i<_demandFillRings.Length; i++)
+        {
+            _demandFillRings[i].fillAmount = 0;
+        }
     }
 
     private void RandomlyAssignDemandRates()
@@ -134,7 +144,7 @@ public class CityHandler : MonoBehaviour
         for (int i = 0; i < _demands.Length; i++)
         {
             if ((int)_cargoType == i) continue;
-            _demandRates[i] = UnityEngine.Random.Range(0.03f, 0.06f);
+            _demandRates[i] = UnityEngine.Random.Range(0.01f, 0.03f)/2;
         }
     }
 
@@ -154,6 +164,27 @@ public class CityHandler : MonoBehaviour
             UpdateLoading();
         }
 
+        if (_isOffloadingProduct)
+        {
+            UpdateOffLoading();
+        }
+
+    }
+     
+    private void UpdateOffLoading()
+    {
+        _offloadFactor += Time.deltaTime * BalanceLibrary.Instance.OffloadRate;
+
+        _demandFillRings[(int)_cargoBeingOffloaded].fillAmount = 1 - _offloadFactor;
+
+        if (_offloadFactor >= 1)
+        {
+            _offloadFactor = 0;
+            _isOffloadingProduct = false;
+            int profit = SatisfyDemandByOneCargo(_cargoBeingOffloaded);
+            //_cargoBeingOffloaded = CargoLibrary.CargoType.Count;
+            CargoOffloadCompleted?.Invoke(_cargoBeingOffloaded, profit);
+        }
     }
 
     private void UpdateLoading()
@@ -167,7 +198,8 @@ public class CityHandler : MonoBehaviour
         {
             _loadFactor = 0;
             _productionInStock--;
-            CargoLoadCompleted?.Invoke(_cargoType);
+            _isLoadingProduct = false;
+            CargoOnloadCompleted?.Invoke(_cargoType);
             UpdateProductionImages();
             UpdateProductionRings();
         }
@@ -315,6 +347,8 @@ public class CityHandler : MonoBehaviour
         }
     }
 
+
+
     public bool CheckIfCityWantsCargo(CargoLibrary.CargoType cargoToSell)
     {
         if (_demands[(int)cargoToSell] > _cargoPaymentThresholds[0])
@@ -324,7 +358,7 @@ public class CityHandler : MonoBehaviour
         else return false;
     }
 
-    public int SatisfyDemandByOneCargo(CargoLibrary.CargoType cargoType)
+    private int SatisfyDemandByOneCargo(CargoLibrary.CargoType cargoType)
     {
         int profit = DetermineProfitFromSale(cargoType);
 
@@ -334,7 +368,7 @@ public class CityHandler : MonoBehaviour
             return 0;
         }
 
-        _demands[(int)cargoType] -= _demandSatisfactionPerCargo;
+        _demands[(int)cargoType] -= BalanceLibrary.Instance.DemandSatisfactionByCargo;
         _demands[(int)cargoType] = Mathf.Clamp01(_demands[(int)cargoType]);
         UpdateDemandIcons();
 
@@ -380,5 +414,18 @@ public class CityHandler : MonoBehaviour
     {
         _isLoadingProduct = false;
         _loadFactor = 0;
+    }
+
+    public void StartOffLoad(CargoLibrary.CargoType cargoType)
+    {
+        _isOffloadingProduct = true;
+        _offloadFactor = 0;
+        _cargoBeingOffloaded = cargoType;
+    }
+
+    public void CancelOffLoad()
+    {
+        _isOffloadingProduct = false;
+        _offloadFactor = 0;
     }
 }

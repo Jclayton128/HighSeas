@@ -19,7 +19,8 @@ public class BalanceLibrary : MonoBehaviour
     [SerializeField] int _highDemandProfit = 5;
     public int HighDemandProfit => _highDemandProfit;
 
-
+    [SerializeField] float _demandSatisfactionByCargo = 0.33f;
+    public float DemandSatisfactionByCargo => _demandSatisfactionByCargo;
 
     private void Awake()
     {
