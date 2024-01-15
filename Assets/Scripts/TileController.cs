@@ -13,7 +13,7 @@ public class TileController : MonoBehaviour
 
     public enum TileObject
     {
-        Nothing, City, Castle, Tree, Rock
+        Nothing, City, Castle, Tree, Rock, Smith
     }
     
     public static TileController Instance { get; private set; }

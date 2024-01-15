@@ -135,6 +135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _baseShipSR: {fileID: 1359253768355967801}
   _currentTile: {fileID: 0}
+  _cargoInHold: 
 --- !u!114 &-5189155954431209458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,7 +197,7 @@ MonoBehaviour:
     maximumInterval: 2
     visualizeSensitivity: 0
   targetCompatibility: {fileID: 0}
-  maxAcceleration: 10
+  maxAcceleration: 30
   rotationSpeed: 360
   slowdownDistance: 0
   pickNextWaypointDist: 0.2

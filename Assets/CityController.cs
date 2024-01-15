@@ -8,17 +8,31 @@ public class CityController : MonoBehaviour
 
     //state
     int _indexer = 0;
+    List<CityHandler> _cities = new List<CityHandler>();
 
     private void Awake()
     {
         Instance = this;
     }
 
+    public void RegisterCity(CityHandler city)
+    {
+        _cities.Add(city);
+    }
+
     public CargoLibrary.CargoType GetNextCargoType()
     {
         var cargo = (CargoLibrary.CargoType)_indexer;
         _indexer++;
-        if (_indexer >= (int)CargoLibrary.CargoType.Count) _indexer = 0;
+        if (_indexer >= (int)CargoLibrary.CargoType.Empty) _indexer = 0;
         return cargo;
+    }
+
+    public void Debug_DevelopCities()
+    {
+        foreach (var city in _cities)
+        {
+            city.Debug_DevelopCity();
+        }
     }
 }

@@ -19,6 +19,8 @@ public class CityHandler : MonoBehaviour
     [SerializeField] Image[] _demandIcons = null;
     [SerializeField] Image[] _productionFillRings = null;
     [SerializeField] Image[] _demandFillRings = null;
+    [SerializeField] Color _productionFillColor = Color.white;
+    [SerializeField] Color _demandFillColor = Color.white;
 
 
 
@@ -49,9 +51,10 @@ public class CityHandler : MonoBehaviour
     [SerializeField] CargoLibrary.CargoType _cargoBeingOffloaded;
 
 
-
+    #region Startup
     void Start()
     {
+        CityController.Instance.RegisterCity(this);
         _cargoType = CityController.Instance.GetNextCargoType();
         _sr.sprite = TileLibrary.Instance.GetRandomCitySprite();
         AssignDemandSprites();
@@ -148,6 +151,9 @@ public class CityHandler : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Flow
     // Update is called once per frame
     void Update()
     {
@@ -256,7 +262,7 @@ public class CityHandler : MonoBehaviour
 
         if (_productionInStock == 0)
         {
-            _productionFillRings[0].color = Color.white;
+            _productionFillRings[0].color = _productionFillColor;
             _productionFillRings[0].fillAmount = _currentProductionFactor;
             _productionFillRings[1].fillAmount = 0;
             _productionFillRings[2].fillAmount = 0;
@@ -264,7 +270,7 @@ public class CityHandler : MonoBehaviour
         else if (_productionInStock == 1)
         {
             _productionFillRings[0].color = Color.white;
-            _productionFillRings[1].color = Color.white;
+            _productionFillRings[1].color = _productionFillColor;
             _productionFillRings[0].fillAmount = 1;
             _productionFillRings[1].fillAmount = _currentProductionFactor;
             _productionFillRings[2].fillAmount = 0;
@@ -273,7 +279,7 @@ public class CityHandler : MonoBehaviour
         {
             _productionFillRings[0].color = Color.white;
             _productionFillRings[1].color = Color.white;
-            _productionFillRings[2].color = Color.white;
+            _productionFillRings[2].color = _productionFillColor;
             _productionFillRings[0].fillAmount = 1;
             _productionFillRings[1].fillAmount = 1;
             _productionFillRings[2].fillAmount = _currentProductionFactor;
@@ -289,8 +295,6 @@ public class CityHandler : MonoBehaviour
         }
 
     }
-
-
 
     private void UpdateDemand()
     {
@@ -314,7 +318,7 @@ public class CityHandler : MonoBehaviour
                 if (!_isBuzzing[i])
                 {
                     _demandTweens[i].Kill();
-                    _demandIcons[i].transform.DOScale(1.3f, .7f).SetLoops(-1, LoopType.Yoyo);
+                    _demandTweens[i] = _demandIcons[i].transform.DOScale(1.3f, .7f).SetLoops(-1, LoopType.Yoyo);
                     _demandIcons[i].CrossFadeAlpha(1f, 0.0001f, true);
                     //_demandIcons[i].transform.localScale = (1 * Vector3.one);
                     _isBuzzing[i] = true;
@@ -347,7 +351,9 @@ public class CityHandler : MonoBehaviour
         }
     }
 
+    #endregion
 
+    #region Cargo Handling
 
     public bool CheckIfCityWantsCargo(CargoLibrary.CargoType cargoToSell)
     {
@@ -404,6 +410,7 @@ public class CityHandler : MonoBehaviour
         }
     }
 
+
     public void StartOnload()
     {
         _isLoadingProduct = true;
@@ -428,4 +435,26 @@ public class CityHandler : MonoBehaviour
         _isOffloadingProduct = false;
         _offloadFactor = 0;
     }
+
+    #endregion
+
+    #region Debug Tools
+
+    public void Debug_DevelopCity()
+    {
+        _productionInStock = 3;
+        _currentProductionFactor = 1;
+
+        for (int i = 0; i < _demands.Length; i++)
+        {
+            _demands[i] = 1;
+        }
+
+        _demands[(int)_cargoType] = 0;
+
+        UpdateProductionImages();
+
+    }
+
+    #endregion
 }

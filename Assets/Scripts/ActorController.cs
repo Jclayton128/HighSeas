@@ -12,13 +12,13 @@ public class ActorController : MonoBehaviour
     [SerializeField] ActorUIHandler[] _uiHandlers = null;
     
     //state
-    [SerializeField] List<ActorHandler> _activePlayersAsActors = new List<ActorHandler>();
+    [SerializeField] List<ActorHandler> _activeActors = new List<ActorHandler>();
 
     public void RegisterNewPlayerAsActor(PlayerInput newPlayer)
     {
         ActorHandler ah = newPlayer.GetComponent<ActorHandler>();
-        _activePlayersAsActors.Add(ah);
-        int playerIndex = _activePlayersAsActors.IndexOf(ah);
+        _activeActors.Add(ah);
+        int playerIndex = _activeActors.IndexOf(ah);
         //Debug.Log($"Added Player {playerIndex}");
         ah.SetupNewActor(playerIndex, _startingTiles[playerIndex], _uiHandlers[playerIndex]);
 
@@ -26,12 +26,23 @@ public class ActorController : MonoBehaviour
 
     public void DeregisterPlayerAsActor(PlayerInput playerToRemove)
     {
-        if (_activePlayersAsActors.Contains(playerToRemove.GetComponent<ActorHandler>()))
-            _activePlayersAsActors.Remove(playerToRemove.GetComponent<ActorHandler>());
+        if (_activeActors.Contains(playerToRemove.GetComponent<ActorHandler>()))
+            _activeActors.Remove(playerToRemove.GetComponent<ActorHandler>());
     }
 
     private void Awake()
     {
         Instance = this;
     }
+
+    public void Debug_GiveAllPlayers10Coins()
+    {
+        foreach (var actor in _activeActors)
+        {
+            actor.ModifyCoins(10);
+        }
+    }
+
 }
+
+

@@ -115,6 +115,7 @@ MonoBehaviour:
   _tileType: 1
   _tileObject: 0
   _cityPrefab: {fileID: 6782937520502379186, guid: 0a6c3e5e6b605ed4095328e93f4dfd19, type: 3}
+  _smithPrefab: {fileID: 7385998537547918890, guid: 2db401d1b24040f4392075e0a7f8e2a9, type: 3}
 --- !u!61 &7344640939912095387
 BoxCollider2D:
   m_ObjectHideFlags: 0

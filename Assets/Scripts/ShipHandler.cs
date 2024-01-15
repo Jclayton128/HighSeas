@@ -6,16 +6,27 @@ using System;
 
 public class ShipHandler : MonoBehaviour
 {
+    public Action<List<CargoLibrary.CargoType>, int> CargoChanged;
+
     [SerializeField] SpriteRenderer _baseShipSR = null;
     AIPath _ai;
 
     //settings
+    int _maxSailingLevels = 3;
+    int _startingSailingLevels = 1;
+
+    int _maxCannonLevels = 2;
+    int _startingCannonLevels = 0;
+
     int _maxCargoSlots = 3;
-    int _startingCargoSlots = 3;
+    int _startingCargoSlots = 1;
+    
 
     //state
     float _timeBetweenMoves = 1f;
     float _timeForNextMove = 0;
+    ActorHandler _actor;
+    public ActorHandler Actor => _actor;
     [SerializeField] TileHandler _currentTile;
     TileHandler _prevTile;
     Seeker _seeker;
@@ -25,33 +36,42 @@ public class ShipHandler : MonoBehaviour
     public List<CargoLibrary.CargoType> CargoInHold => _cargoInHold;
     bool _hasFreeCargoSpace = true;
     public bool HasFreeCargoSpace => _hasFreeCargoSpace;
-    int _currentCargoSlots;
 
+    int _currentSailingLevel;
+    int _currentCannonLevel;
+    int _currentCargoSlots;
+    int _upgradeCount = 0;
 
     private void Awake()
     {
         _currentCargoSlots = _startingCargoSlots;
+        _currentSailingLevel = _startingSailingLevels;
+        _currentCannonLevel = _startingCannonLevels;
         _seeker = GetComponent<Seeker>();
         _ai = GetComponent<AIPath>();
         _cargoInHold = new List<CargoLibrary.CargoType>();
+
     }
 
     private void Start()
     {
         _timeForNextMove = Time.time + _timeBetweenMoves;
         //FindCurrentTile();w
+        SetCargoUI();
     }
 
-    public void SetPlayerIndex(int index)
+    public void SetupShip(int index, ActorHandler handler)
     {
-        _baseShipSR.color = PlayerLibrary.Instance.GetPlayerColor(index);   
+        _baseShipSR.color = PlayerLibrary.Instance.GetPlayerColor(index);
+        _actor = handler;
     }
+
+    #region Movement
 
     public void SetDestination(DestinationHandler dh)
     {
         _destinationHandler = dh;
         _destinationHandler.DestinationChanged += HandleUpdatedDestination;
-
     }
 
     private void HandleUpdatedDestination(TileHandler newDest)
@@ -60,6 +80,10 @@ public class ShipHandler : MonoBehaviour
 
     }
 
+    #endregion
+
+
+    #region Cargo
     public void RemoveOneCargo(CargoLibrary.CargoType cargoRemoved)
     {
         if (_cargoInHold.Contains(cargoRemoved))
@@ -68,6 +92,7 @@ public class ShipHandler : MonoBehaviour
         }
 
         CheckForFreeCargoSpace();
+        SetCargoUI();
     }
 
     public void AddOneCargo(CargoLibrary.CargoType cargoAdded)
@@ -76,7 +101,29 @@ public class ShipHandler : MonoBehaviour
 
         _cargoInHold.Add(cargoAdded);
         CheckForFreeCargoSpace();
+        SetCargoUI();
     }
+
+    public bool CheckCanModifyCargoCapacity()
+    {
+        if (_currentCargoSlots == _maxCargoSlots) return false;
+        else return true;
+    }
+
+    private void ModifyCargoCapacity(int amountToAdd)
+    {
+        _currentCargoSlots += amountToAdd;
+        _currentCargoSlots = Mathf.Clamp(_currentCargoSlots, 0, _maxCargoSlots);
+
+        CheckForFreeCargoSpace();
+        SetCargoUI();
+    }
+
+    private void SetCargoUI()
+    {
+        CargoChanged?.Invoke(_cargoInHold, _currentCargoSlots);
+    }
+
     private void CheckForFreeCargoSpace()
     {
         if (_cargoInHold.Count < _currentCargoSlots)
@@ -86,70 +133,64 @@ public class ShipHandler : MonoBehaviour
         else _hasFreeCargoSpace = false;
     }
 
-    private void Update()
-    {
-        //_prevTile = _currentTile;
-        //FindCurrentTile();
-        //if (_currentTile != _prevTile) MovementController.Instance.
-        //        HandleMovement(transform.position);
+    #endregion
 
-        //if (Time.time >= _timeForNextMove)
-        //{
-        //    CalculateDesiredMove();
-        //    _timeForNextMove = Time.time + _timeBetweenMoves;
-        //}
+    #region Upgrades
+
+    public bool CheckIfCanInstallUpgrade(SmithLibrary.SmithType upgradeConsidered)
+    {
+        switch (upgradeConsidered)
+        {
+            case SmithLibrary.SmithType.Sails:
+                if (_currentSailingLevel >= _maxSailingLevels)
+                    return false;
+                else return true;
+
+            case SmithLibrary.SmithType.Cargo:
+                if (_currentCargoSlots  >= _maxCargoSlots)
+                    return false;
+                else return true;
+
+            case SmithLibrary.SmithType.Cannon:
+                if (_currentCannonLevel  >= _maxCannonLevels)
+                    return false;
+                else return true;
+
+            default:
+                return false;
+        }
     }
 
-    private void CalculateDesiredMove()
+    public bool CheckIfCanAffordUpgrade(int proposedCost)
     {
-        //Generate Path to destination, avoiding land and other ships (impassable)
-        //due to the graph already marking those as impassable terrain.
-
-        if (_destinationHandler.CurrenTile == _currentTile) return;
-
-
-        _currentPath =
-            _seeker.StartPath(transform.position, _destinationHandler.transform.position,
-            ExecuteMovementAttempt);
+        return _actor.CheckIfCanAfford(proposedCost);
     }
 
-    private void ExecuteMovementAttempt(Path p)
+    public void InstallUpgrade(SmithLibrary.SmithType upgradeInstalled)
     {
-        ////if (p.error)
-        ////{
-        ////    Debug.Log(p.errorLog);
-        ////}
+        switch (upgradeInstalled)
+        {
+            case SmithLibrary.SmithType.Sails:
+                _currentSailingLevel++;
+                _ai.maxSpeed = BalanceLibrary.Instance.GetSpeedByCount(_currentSailingLevel);
+                break;
 
-        //_currentPath = p;
+            case SmithLibrary.SmithType.Cargo:
+                _currentCargoSlots++;
+                SetCargoUI();
+                break;
 
-        ////Calculate int direction of next move on the Path
-        //Vector3 dir = (_currentPath.vectorPath[1] - transform.position).normalized;
-
-
-        //int dirInt = FindIntDirectionFromNextStepVector(dir);
-        //Debug.Log($"{dir} leads to {dirInt}");
-        ////Debug.Log("next move should be " + dir);
-
-        ////Check if movement in desired direction is possible.
-        //if (!_currentTile) FindCurrentTile();
-        //var proposedDestination = _currentTile.GetNeighboringTile_Traversable(dirInt);
-        //if (proposedDestination == null) return;
-
-        ////Execute Movement
-        //_currentTile = proposedDestination;
-        //transform.position = _currentTile.transform.position;
-        //MovementController.Instance.HandleMovement();
-        
+            case SmithLibrary.SmithType.Cannon:
+                _currentCannonLevel++;
+                break;
+        }
+        _upgradeCount++;
+        _actor.HandleUpgrade(_upgradeCount);
     }
 
-    private int FindIntDirectionFromNextStepVector(Vector3 vector3)
-    {
-        if (vector3.y > 0) return 0;
-        else if (vector3.y < 0) return 2;
-        else if (vector3.x > 0) return 1;
-        else if (vector3.x < 0) return 3;
-        else return -1;
-    }
+    #endregion
+
+
 
     private void FindCurrentTile()
     {

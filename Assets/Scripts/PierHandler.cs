@@ -7,11 +7,13 @@ using UnityEngine;
 public class PierHandler : MonoBehaviour
 {
     [SerializeField] CityHandler _attachedCity;
+    [SerializeField] SmithHandler _attachedSmith;
+
     TileHandler _tileHandler;
 
     //state
     [SerializeField] ShipHandler _currentShip;
-
+    
     private void Start()
     {
         Invoke(nameof(Delay_InitializePier), 0.01f);
@@ -20,10 +22,10 @@ public class PierHandler : MonoBehaviour
     public void Delay_InitializePier()
     {
         _tileHandler = GetComponent<TileHandler>();
-        FindAttachedCity();
+        FindAttachedEntity();
     }
 
-    private void FindAttachedCity()
+    private void FindAttachedEntity()
     {        
         foreach (var tile in _tileHandler.Neighbors)
         {
@@ -31,6 +33,10 @@ public class PierHandler : MonoBehaviour
             {
                 _attachedCity = tile.City;
                 break;
+            }
+            if (tile.Smith)
+            {
+                _attachedSmith = tile.Smith;
             }
         }
     }
@@ -48,10 +54,13 @@ public class PierHandler : MonoBehaviour
             else
             {
                 _currentShip = ship;
-                CheckAndInitiateShipTransaction();
+                if (_attachedCity) CheckAndInitiateShipTransaction();
+                if (_attachedSmith) CheckAndInitiateShipUpgrade(
+                    _attachedSmith.SmithType, _attachedSmith.CurrentUpgradeCost);
             }
         }
     }
+
 
     private void CheckAndInitiateShipTransaction()
     {
@@ -77,6 +86,25 @@ public class PierHandler : MonoBehaviour
 
     }
 
+
+    private void CheckAndInitiateShipUpgrade(SmithLibrary.SmithType proposedUpgrade, int proposedCost)
+    {
+        if (_currentShip.CheckIfCanInstallUpgrade(proposedUpgrade) &&
+            _currentShip.CheckIfCanAffordUpgrade(proposedCost))
+        {
+            _attachedSmith.StartUpgrade();
+            _attachedSmith.UpgradeCompleted += HandleUpgradeCompleted;
+        }
+        else if (!_currentShip.CheckIfCanInstallUpgrade(proposedUpgrade))
+        {
+            Debug.Log("Can't install the upgrade");
+        }
+        else if (!_currentShip.CheckIfCanAffordUpgrade(proposedCost))
+        {
+            Debug.Log("Can't afford the upgrade");
+        }
+    }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         ShipHandler ship;
@@ -84,14 +112,30 @@ public class PierHandler : MonoBehaviour
         {
             if (ship == _currentShip)
             {
+                if (_attachedCity)
+                {
+                    _attachedCity.CancelOnload();
+                    _attachedCity.CancelOffLoad();
+                    _attachedCity.CargoOffloadCompleted -= HandleCompletedOffload;
+                }
+                else if (_attachedSmith)
+                {
+                    _attachedSmith.CancelUpgrade();
+                    _attachedSmith.UpgradeCompleted -= HandleUpgradeCompleted;
+                }
 
-                _attachedCity.CancelOnload();
-                _attachedCity.CancelOffLoad();
                 _currentShip = null;
             }
         }
     }
 
+
+    private void HandleUpgradeCompleted(SmithLibrary.SmithType upgradeCompleted)
+    {
+        _currentShip.Actor.ModifyCoins(-_attachedSmith.CurrentUpgradeCost);
+        _currentShip.InstallUpgrade(upgradeCompleted);
+        _attachedSmith.UpgradeCompleted -= HandleUpgradeCompleted;
+    }
 
     public void InitiateCargoOffload(CargoLibrary.CargoType cargoToSell)
     {
@@ -101,7 +145,7 @@ public class PierHandler : MonoBehaviour
 
     private void HandleCompletedOffload(CargoLibrary.CargoType cargoSold, int profit)
     {
-        Debug.Log($"chaching! Gained {profit} coins!");
+        _currentShip.Actor.ModifyCoins(profit);
         _currentShip.RemoveOneCargo(cargoSold);
         //TODO hook into player corner UI;
         _attachedCity.CargoOffloadCompleted -= HandleCompletedOffload;

@@ -17,6 +17,7 @@ public class TileHandler : MonoBehaviour
     [SerializeField] TileController.TileType _tileType = TileController.TileType.ShallowWater;
     [SerializeField] TileController.TileObject _tileObject = TileController.TileObject.Nothing;
     [SerializeField] CityHandler _cityPrefab = null;
+    [SerializeField] SmithHandler _smithPrefab = null;
 
 
     //state
@@ -24,6 +25,7 @@ public class TileHandler : MonoBehaviour
     public TileHandler[] Neighbors => _neighbors_All;
     TileHandler[] _neighbors_Traversable = new TileHandler[4];
     public CityHandler City { get; private set; }
+    public SmithHandler Smith { get; private set; }
 
 
     private void Start()
@@ -108,6 +110,12 @@ public class TileHandler : MonoBehaviour
             if (City || GetComponentInChildren<CityHandler>()) return;
             _srObject.sprite = null;
             City =Instantiate(_cityPrefab, transform);
+        }
+        else if (_tileObject == TileController.TileObject.Smith)
+        {
+            if (Smith || GetComponentInChildren<SmithHandler>()) return;
+            _srObject.sprite = null;
+            Smith = Instantiate(_smithPrefab, transform);
         }
     }
 
