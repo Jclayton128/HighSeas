@@ -42,6 +42,8 @@ public class ShipHandler : MonoBehaviour
     int _currentCargoSlots;
     int _upgradeCount = 0;
 
+    public Vector3 Velocity { get; private set; }
+
     private void Awake()
     {
         _currentCargoSlots = _startingCargoSlots;
@@ -78,6 +80,11 @@ public class ShipHandler : MonoBehaviour
     {
         _ai.destination = newDest.transform.position;
 
+    }
+
+    private void Update()
+    {
+        Velocity = _ai.velocity;
     }
 
     #endregion

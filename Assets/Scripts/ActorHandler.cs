@@ -24,6 +24,7 @@ public class ActorHandler : MonoBehaviour
 
     //state
     int _actorIndex;
+    public int ActorIndex => _actorIndex;
     int _totalCoins = 0;
     int _currentCoins = 0;
 

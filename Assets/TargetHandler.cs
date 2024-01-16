@@ -2,11 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using System;
 
-public class DestinationHandler : MonoBehaviour
+public class TargetHandler : MonoBehaviour
 {
-    public Action<TileHandler> DestinationChanged;
 
     /// <summary>
     /// 0: NW, 1: NE, 2: SE, 3: SW
@@ -22,7 +20,6 @@ public class DestinationHandler : MonoBehaviour
     private void Start()
     {
         SetDataFromPlayerIndex();
-        FindCurrentTile();
         BeginScalePulsing();
     }
 
@@ -75,28 +72,6 @@ public class DestinationHandler : MonoBehaviour
     private void BeginScalePulsing()
     {
         //JUICE TODO: sync these pulses up so that random joining players still pulse together
-        _scaleTween = transform.DOScale(1.1f, 0.7f).SetLoops(-1, LoopType.Yoyo);
+        _scaleTween = transform.DOScale(1.1f, 0.35f).SetLoops(-1, LoopType.Yoyo);
     }
-    private void FindCurrentTile()
-    {
-        var hit_0 = Physics2D.OverlapCircle(transform.position, 0.1f, Layers.LayerMask_AllTiles);
-        if (hit_0) _currentTileHandler= hit_0.GetComponent<TileHandler>();
-    }
-
-
-    public void CommandMove(int direction)
-    {
-        if (!_currentTileHandler) FindCurrentTile();
-
-        var proposedDestination = _currentTileHandler.GetNeighboringTile_All(direction);
-        if (proposedDestination == null) return;
-
-        _currentTileHandler = proposedDestination;
-        transform.position = _currentTileHandler.transform.position;
-
-        DestinationChanged?.Invoke(proposedDestination);
-    }
-
-
-
 }
