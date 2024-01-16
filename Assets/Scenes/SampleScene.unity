@@ -5561,6 +5561,79 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06fe639f7276d9f40a7d50160b83c951, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &190441086
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 631514895759659260, guid: 6b78329c75d694742818172e41f22aca, type: 3}
+      propertyPath: _cannonLevel
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1359253768355967801, guid: 6b78329c75d694742818172e41f22aca, type: 3}
+      propertyPath: m_Color.b
+      value: 0.9891553
+      objectReference: {fileID: 0}
+    - target: {fileID: 1359253768355967801, guid: 6b78329c75d694742818172e41f22aca, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1359253768355967801, guid: 6b78329c75d694742818172e41f22aca, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891527322400390680, guid: 6b78329c75d694742818172e41f22aca, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.5399556
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891527322400390680, guid: 6b78329c75d694742818172e41f22aca, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.027582
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891527322400390680, guid: 6b78329c75d694742818172e41f22aca, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891527322400390680, guid: 6b78329c75d694742818172e41f22aca, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891527322400390680, guid: 6b78329c75d694742818172e41f22aca, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891527322400390680, guid: 6b78329c75d694742818172e41f22aca, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891527322400390680, guid: 6b78329c75d694742818172e41f22aca, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891527322400390680, guid: 6b78329c75d694742818172e41f22aca, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891527322400390680, guid: 6b78329c75d694742818172e41f22aca, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891527322400390680, guid: 6b78329c75d694742818172e41f22aca, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8579286434956831573, guid: 6b78329c75d694742818172e41f22aca, type: 3}
+      propertyPath: m_Name
+      value: Ship
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6b78329c75d694742818172e41f22aca, type: 3}
 --- !u!114 &200873744 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8611540198078272783, guid: f1f40651364ba134d830802f4a9ae9f9, type: 3}
@@ -62575,3 +62648,4 @@ SceneRoots:
   - {fileID: 466285621}
   - {fileID: 1630362150}
   - {fileID: 462206950}
+  - {fileID: 190441086}

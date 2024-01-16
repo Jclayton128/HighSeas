@@ -11,10 +11,11 @@ public class CannonHandler : MonoBehaviour
     [SerializeField] float _scanRange = 4f;
     [SerializeField] float _timeBetweenScans = 0.5f;
     Vector3 _targetMarkerHoldingPosition = Vector3.one * 1000;
-    [SerializeField] float _timeBetweenShots = 2f;
+    [SerializeField] float _timeBetweenShots = 3f;
     [SerializeField] float _shotSpeed = 2f;
     [SerializeField] float _maxTargetError = 0.5f;
     [SerializeField] float _errorReductionPerShot = 0.1f;
+
 
     //state
     [SerializeField] int _cannonLevel = 0;
