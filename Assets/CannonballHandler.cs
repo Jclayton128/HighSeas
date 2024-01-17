@@ -7,17 +7,20 @@ public class CannonballHandler : MonoBehaviour
 {
 
     //references
-    [SerializeField] SpriteRenderer _srCannonball;
-    [SerializeField] SpriteRenderer _srShadow;
+    [SerializeField] SpriteRenderer _srCannonball = null;
+    [SerializeField] SpriteRenderer _srShadow = null;
     Collider2D _coll;
+    [SerializeField] AnimationCurve _curve = null;
 
     //settings
     [SerializeField] float _scaleAtApex = 1.3f;
     [SerializeField] float _yAdjustStart = 0.08f;
     [SerializeField] float _yAdjustApex = 3f;
 
+
     //instance state
-    [SerializeField] float _lifetimeFactor;
+    ParticleSystem _ps;
+    float _lifetimeFactor;
     float _totalLifetime;
     float _remainingLifetime;
     float _deltaFactorFromMidpoint;
@@ -26,9 +29,11 @@ public class CannonballHandler : MonoBehaviour
     Vector3 _scale = Vector3.one;
     Vector3 _yAdjust = Vector3.zero;
 
+
     public void InitializeCannonball()
     {
         _coll = GetComponent<Collider2D>();
+        _ps = GetComponent<ParticleSystem>();
     }
 
     public void SetupCannonballInstance(Vector3 spawnPosition, Vector3 targetPosition)
@@ -71,16 +76,19 @@ public class CannonballHandler : MonoBehaviour
 
     private void AdjustYAdjustWithLifetime()
     {
-        if (_lifetimeFactor < .5f)
-        {
-            _yAdjust.y = Mathf.Lerp(_yAdjustStart, _yAdjustApex, _lifetimeFactor);
-            //JUICE TODO adjust the Lerp to not be linear. This currently looks like a sharp rise-snap-fall.
+        var x = _curve.Evaluate(_lifetimeFactor);
+        _yAdjust.y = Mathf.Lerp(_yAdjustStart, _yAdjustApex, x);
+        //if (_lifetimeFactor < .5f)
+        //{
+        //    _yAdjust.y = Mathf.Lerp(_yAdjustStart, _yAdjustApex, x);
+        //    //JUICE TODO adjust the Lerp to not be linear. This currently looks like a sharp rise-snap-fall.
             
-        }
-        if (_lifetimeFactor >= .5f)
-        {
-            _yAdjust.y = Mathf.Lerp(_yAdjustApex, _yAdjustStart, _lifetimeFactor);
-        }
+        //}
+        //if (_lifetimeFactor >= .5f)
+        //{
+
+        //    _yAdjust.y = Mathf.Lerp(_yAdjustApex, _yAdjustStart, x);
+        //}
         _srCannonball.transform.localPosition = _yAdjust;
     }
 
@@ -102,8 +110,10 @@ public class CannonballHandler : MonoBehaviour
         _srCannonball.enabled = false;
         _srShadow.enabled = false;
         _coll.enabled = false;
-        //JUICE TODO check for tile tile and emit particle splash;
-        Invoke(nameof(Delay_TerminateCannonball), 2f);
+        //JUICE TODO check for tile tile and emit particle splash of water, grass, or wood;
+        //JUICE TODO splash sound
+        _ps.Emit(30);
+        Invoke(nameof(Delay_TerminateCannonball), 4f);
     }
 
     private void Delay_TerminateCannonball()

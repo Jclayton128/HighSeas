@@ -26,7 +26,7 @@ public class CannonHandler : MonoBehaviour
     float _timeForNextShot = 0;
     float _currentTargetError;
     int _shotsInStreak = 0;
-
+    ParticleSystem _ps;
     
 
     private void Start()
@@ -37,8 +37,8 @@ public class CannonHandler : MonoBehaviour
         if (_ship)
         {
             _targetMarker.SetPlayerIndex(_ship.Actor.ActorIndex);
-        }       
-
+        }
+        _ps = GetComponent<ParticleSystem>();
     }
 
     private void Update()
@@ -70,7 +70,8 @@ public class CannonHandler : MonoBehaviour
 
     private void Shoot()
     {
-        Debug.Log("kaboom!");
+        _ps.Emit(1);
+        //JUICE TODO cannonfire sound
         var shot = CannonController.Instance.RequisitionCannonball();
 
         Vector3 error = UnityEngine.Random.insideUnitCircle.normalized * _currentTargetError;
