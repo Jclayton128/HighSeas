@@ -21,6 +21,7 @@ public class TileHandler : MonoBehaviour
 
 
     //state
+    public TileController.TileType TileType => _tileType;
     TileHandler[] _neighbors_All = new TileHandler[4];
     public TileHandler[] Neighbors => _neighbors_All;
     TileHandler[] _neighbors_Traversable = new TileHandler[4];
@@ -75,7 +76,6 @@ public class TileHandler : MonoBehaviour
 
     private void SetBaseTile(TileLibrary tileLibRef)
     {
-        _srBase = GetComponent<SpriteRenderer>();
         if (_tileType == TileController.TileType.ShallowWater)
         {
             _srBase.sprite = tileLibRef.GetRandomWaterSprite();

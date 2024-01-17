@@ -18,9 +18,13 @@ public class TileController : MonoBehaviour
     
     public static TileController Instance { get; private set; }
     [SerializeField] TileLibrary _tileLibraryReference;
+    [SerializeField] float _waveAmplitude = 1.2f;
+    [SerializeField] float _waveFrequency = 1f;
 
     //state
     [SerializeField] TileHandler[] _tileCollection = null;
+    public float WaveAmplitude => _waveAmplitude;
+    public float WaveFrequency => _waveFrequency;
 
 
 
