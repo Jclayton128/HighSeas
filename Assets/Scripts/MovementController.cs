@@ -10,6 +10,11 @@ public class MovementController : MonoBehaviour
 
     //state
     AstarPath _asp;
+    [SerializeField] float _rockingAmplitude = 2f;
+    [SerializeField] float _rockingWavelength = 2f;
+    public float RockingAmplitude => _rockingAmplitude;
+    public float RockingPeriod => _rockingWavelength;
+
 
     private void Awake()
     {

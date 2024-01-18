@@ -23,6 +23,7 @@ public class PlayerLibrary : MonoBehaviour
 
     public Color GetPlayerColor(int playerIndex)
     {
+        if (playerIndex < 0) return Color.black;
         return _playerColors[playerIndex];
     }
 

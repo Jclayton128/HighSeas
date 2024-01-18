@@ -15,7 +15,7 @@ public class TargetHandler : MonoBehaviour
     Tween _scaleTween;
     TileHandler _currentTileHandler;
     public TileHandler CurrenTile => _currentTileHandler;
-    [SerializeField] int _playerIndex = 0;
+    int _playerIndex = -1;
 
     private void Start()
     {

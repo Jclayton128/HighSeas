@@ -38,7 +38,7 @@ public class ShipHandler : MonoBehaviour
     public bool HasFreeCargoSpace => _hasFreeCargoSpace;
 
     int _currentSailingLevel;
-    int _currentCannonLevel;
+    CannonHandler _cannonHandler;
     int _currentCargoSlots;
     int _upgradeCount = 0;
 
@@ -48,7 +48,8 @@ public class ShipHandler : MonoBehaviour
     {
         _currentCargoSlots = _startingCargoSlots;
         _currentSailingLevel = _startingSailingLevels;
-        _currentCannonLevel = _startingCannonLevels;
+        _cannonHandler = GetComponentInChildren<CannonHandler>();
+        _cannonHandler.SetCannonLevel(_startingCannonLevels);
         _seeker = GetComponent<Seeker>();
         _ai = GetComponent<AIPath>();
         _cargoInHold = new List<CargoLibrary.CargoType>();
@@ -159,7 +160,7 @@ public class ShipHandler : MonoBehaviour
                 else return true;
 
             case SmithLibrary.SmithType.Cannon:
-                if (_currentCannonLevel  >= _maxCannonLevels)
+                if (_cannonHandler.CannonLevel  >= _maxCannonLevels)
                     return false;
                 else return true;
 
@@ -188,7 +189,7 @@ public class ShipHandler : MonoBehaviour
                 break;
 
             case SmithLibrary.SmithType.Cannon:
-                _currentCannonLevel++;
+                _cannonHandler.SetCannonLevel(_cannonHandler.CannonLevel + 1);
                 break;
         }
         _upgradeCount++;

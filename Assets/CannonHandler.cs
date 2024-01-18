@@ -19,6 +19,7 @@ public class CannonHandler : MonoBehaviour
 
     //state
     [SerializeField] int _cannonLevel = 0;
+    public int CannonLevel => _cannonLevel;
     ShipHandler _target;
     TargetHandler _targetMarker;
     float _timeForNextScan = 0;
@@ -58,7 +59,7 @@ public class CannonHandler : MonoBehaviour
             if (Time.time >= _timeForNextShot)
             {
                 Shoot();
-                _timeForNextShot = Time.time + _timeBetweenShots;
+                _timeForNextShot = Time.time + (_timeBetweenShots/_cannonLevel);
             }
         }
         else
@@ -107,5 +108,10 @@ public class CannonHandler : MonoBehaviour
             _target = null;
         }
 
+    }
+
+    public void SetCannonLevel(int level)
+    {
+        _cannonLevel = level;
     }
 }

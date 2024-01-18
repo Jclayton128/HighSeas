@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1124728655598421860}
   - component: {fileID: 1359253768355967801}
+  - component: {fileID: 5524899016383586053}
   m_Layer: 0
   m_Name: BaseShipSR
   m_TagString: Untagged
@@ -25,13 +26,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2426795832478415308}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.0017453891, w: 0.9999985}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7891527322400390680}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -0.2}
 --- !u!212 &1359253768355967801
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -74,7 +75,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 9e7e77f4aa7712f46bad76a8b0900bfa, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0.115121365, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -83,7 +84,19 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
+--- !u!114 &5524899016383586053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2426795832478415308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a368d3c99d2bb204dbb8fc9353c1ada6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8579286434956831573
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,8 +131,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1124728655598421860}
   - {fileID: 3037202961191732913}
+  - {fileID: 1124728655598421860}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7498456027221341968
@@ -266,7 +279,7 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.09}
+  m_Offset: {x: 0, y: 0}
   m_Size: {x: 1.05, y: 0.49}
   m_Direction: 1
 --- !u!1001 &8505418537331918525
@@ -279,6 +292,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2882583398226326089, guid: e47e107891b521b4eba409097bdbf7cd, type: 3}
       propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2882583398226326089, guid: e47e107891b521b4eba409097bdbf7cd, type: 3}
+      propertyPath: ShapeModule.m_Position.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2882583398226326089, guid: e47e107891b521b4eba409097bdbf7cd, type: 3}
@@ -311,15 +328,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6642529181394010124, guid: e47e107891b521b4eba409097bdbf7cd, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6642529181394010124, guid: e47e107891b521b4eba409097bdbf7cd, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6642529181394010124, guid: e47e107891b521b4eba409097bdbf7cd, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6642529181394010124, guid: e47e107891b521b4eba409097bdbf7cd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

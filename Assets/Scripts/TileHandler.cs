@@ -18,6 +18,7 @@ public class TileHandler : MonoBehaviour
     [SerializeField] TileController.TileObject _tileObject = TileController.TileObject.Nothing;
     [SerializeField] CityHandler _cityPrefab = null;
     [SerializeField] SmithHandler _smithPrefab = null;
+    [SerializeField] GameObject _castlePrefab = null;
 
 
     //state
@@ -27,6 +28,7 @@ public class TileHandler : MonoBehaviour
     TileHandler[] _neighbors_Traversable = new TileHandler[4];
     public CityHandler City { get; private set; }
     public SmithHandler Smith { get; private set; }
+    public GameObject Castle { get; private set; }
 
 
     private void Start()
@@ -107,15 +109,24 @@ public class TileHandler : MonoBehaviour
         }
         else if (_tileObject == TileController.TileObject.City)
         {
-            if (City || GetComponentInChildren<CityHandler>()) return;
+            if (!City) City = GetComponentInChildren<CityHandler>();
+            if (City) return;
             _srObject.sprite = null;
             City =Instantiate(_cityPrefab, transform);
         }
         else if (_tileObject == TileController.TileObject.Smith)
         {
-            if (Smith || GetComponentInChildren<SmithHandler>()) return;
+            if (!Smith) Smith = GetComponentInChildren<SmithHandler>();
+            if (Smith) return;
             _srObject.sprite = null;
             Smith = Instantiate(_smithPrefab, transform);
+        }
+        else if (_tileObject == TileController.TileObject.Castle)
+        {
+            if (!Castle) Castle = GetComponentInChildren<CannonHandler>().transform.parent.gameObject;
+            if (Castle ) return;
+            _srObject.sprite = null;
+            Castle = Instantiate(_castlePrefab, transform);
         }
     }
 
