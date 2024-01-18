@@ -13,9 +13,19 @@ public class ActorUIHandler : MonoBehaviour
     [SerializeField] Image _playerRank = null;
     [SerializeField] Image[] _cargoSlots = null;
     [SerializeField] Image _panel = null;
+    [SerializeField] Image[] _crews = null;
 
     //state
     ActorHandler _actor;
+
+    private void Start()
+    {
+        _playerNameTMP.text = "N/A";
+        HandleRankUpdated(0);
+        HandleUpdatedCoinCount(0);
+        HandleUpdatedSlots(null, 0);
+        HandleUpdatedCrew(0);
+    }
 
 
     public void AssignActor(ActorHandler actor, int playerIndex)
@@ -31,18 +41,18 @@ public class ActorUIHandler : MonoBehaviour
         actor.ActorCoinCountUpdated += HandleUpdatedCoinCount;
         actor.ActorRankUpdated += HandleRankUpdated;
         actor.ActorCargoSlotsUpdated += HandleUpdatedSlots;
+        actor.ActorCrewUpdated += HandleUpdatedCrew;
+
     }
 
-    private void HandleUpdatedCoinCount(int obj)
-    {
-        _coinCountTMP.text = obj.ToString();
-    }
+
 
     private void OnDestroy()
     {
         _actor.ActorCoinCountUpdated -= HandleUpdatedCoinCount;
         _actor.ActorRankUpdated -= HandleRankUpdated;
         _actor.ActorCargoSlotsUpdated -= HandleUpdatedSlots;
+        _actor.ActorCrewUpdated -= HandleUpdatedCrew;
     }
 
     private void HandleRankUpdated(int obj)
@@ -58,7 +68,7 @@ public class ActorUIHandler : MonoBehaviour
         }
         for (int i =0; i < _cargoSlots.Length; i++)
         {
-            if (i < openSlots)
+            if (i < openSlots && cargos != null)
             {
                 if (i >= cargos.Count)
                 {
@@ -73,5 +83,18 @@ public class ActorUIHandler : MonoBehaviour
             }
             else _cargoSlots[i].sprite = CargoLibrary.Instance.GetCargoSprite(CargoLibrary.CargoType.Blocked);
         }
+    }
+    private void HandleUpdatedCrew(int crewCount)
+    {
+        for (int i = 0; i < _crews.Length; i++)
+        {
+            if (i < crewCount) _crews[i].sprite = PlayerLibrary.Instance.GetCrewSprite(_actor.ActorIndex);
+            else _crews[i].sprite = PlayerLibrary.Instance.GetCrewSprite(-1);
+        }
+    }
+
+    private void HandleUpdatedCoinCount(int obj)
+    {
+        _coinCountTMP.text = obj.ToString();
     }
 }

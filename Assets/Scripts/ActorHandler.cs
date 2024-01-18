@@ -11,6 +11,7 @@ public class ActorHandler : MonoBehaviour
     public Action<int> ActorCoinCountUpdated;
     public Action<int> ActorRankUpdated;
     public Action<List<CargoLibrary.CargoType>, int> ActorCargoSlotsUpdated;
+    public Action<int> ActorCrewUpdated;
 
     //settings
     [SerializeField] DestinationHandler _destinationPrefab = null;
@@ -27,6 +28,7 @@ public class ActorHandler : MonoBehaviour
     public int ActorIndex => _actorIndex;
     int _totalCoins = 0;
     int _currentCoins = 0;
+    CrewHandler _crewHandler;
 
     public void SetupNewActor(int playerIndex, TileHandler startingTile, ActorUIHandler ui)
     {
@@ -43,8 +45,22 @@ public class ActorHandler : MonoBehaviour
         _ship.SetupShip(playerIndex, this);
         _ship.SetDestination(_destination);
         _ship.CargoChanged += HandleCargoChanged;
+
+        _crewHandler = _ship.GetComponent<CrewHandler>();
+        _crewHandler.CrewCountChanged += HandleCrewChanged;
+        _crewHandler.CrewCountAtZero += HandleCrewAtZero;
+
     }
 
+    private void HandleCrewChanged(int obj)
+    {
+        ActorCrewUpdated?.Invoke(obj);
+    }
+
+    private void HandleCrewAtZero()
+    {
+        Debug.Log("Crew at zero!");
+    }
 
     private void OnDestroy()
     {

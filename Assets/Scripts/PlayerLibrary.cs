@@ -11,6 +11,9 @@ public class PlayerLibrary : MonoBehaviour
     [SerializeField] Sprite[] _ranks = null;
     [SerializeField] Sprite[] _panels = null;
     [SerializeField] string[] _shipNames = null;
+    [SerializeField] Sprite[] _crewSprites = null;
+    [SerializeField] Sprite _blankCrew = null;
+    
 
     //state
     List<string> _shipNamesAvailable;
@@ -51,5 +54,11 @@ public class PlayerLibrary : MonoBehaviour
             return _panels[playerIndex];
         }
         else return null;
+    }
+
+    public Sprite GetCrewSprite(int playerIndex)
+    {
+        if (playerIndex < 0) return _blankCrew;
+        return _crewSprites[playerIndex];
     }
 }

@@ -16,7 +16,7 @@ public class CannonballHandler : MonoBehaviour
     [SerializeField] float _scaleAtApex = 1.3f;
     [SerializeField] float _yAdjustStart = 0.08f;
     [SerializeField] float _yAdjustApex = 3f;
-
+    [SerializeField] float _minFactorToHit = 0.9f;
 
     //instance state
     ParticleSystem _ps;
@@ -40,7 +40,7 @@ public class CannonballHandler : MonoBehaviour
     {
         _srCannonball.enabled = true;
         _srShadow.enabled = true;
-        _coll.enabled = true;
+        _coll.enabled = false;
 
         transform.position = spawnPosition;
         Vector3 spread = (targetPosition - spawnPosition);
@@ -66,6 +66,11 @@ public class CannonballHandler : MonoBehaviour
 
         AdjustYAdjustWithLifetime();
         AdjustSizeWithLifetime();
+
+        if (_lifetimeFactor >= _minFactorToHit)
+        {
+            _coll.enabled = true;
+        }
 
         if (_remainingLifetime <= 0)
         {
@@ -104,15 +109,20 @@ public class CannonballHandler : MonoBehaviour
         }
     }
 
-    private void TerminateCannonball()
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    TerminateCannonball();
+    //}
+
+    public void TerminateCannonball()
     {
         _isActive = false;
         _srCannonball.enabled = false;
         _srShadow.enabled = false;
         _coll.enabled = false;
-        //JUICE TODO check for tile tile and emit particle splash of water, grass, or wood;
+        _ps.Emit(30); //JUICE TODO check for tile tile and emit particle splash of water, grass, or wood;
         //JUICE TODO splash sound
-        _ps.Emit(30);
+
         Invoke(nameof(Delay_TerminateCannonball), 4f);
     }
 

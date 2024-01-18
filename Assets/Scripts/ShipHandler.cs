@@ -41,7 +41,7 @@ public class ShipHandler : MonoBehaviour
     CannonHandler _cannonHandler;
     int _currentCargoSlots;
     int _upgradeCount = 0;
-
+    CrewHandler _crewHandler;
     public Vector3 Velocity { get; private set; }
 
     private void Awake()
@@ -53,7 +53,7 @@ public class ShipHandler : MonoBehaviour
         _seeker = GetComponent<Seeker>();
         _ai = GetComponent<AIPath>();
         _cargoInHold = new List<CargoLibrary.CargoType>();
-
+        _crewHandler = GetComponent<CrewHandler>();
     }
 
     private void Start()
@@ -110,6 +110,7 @@ public class ShipHandler : MonoBehaviour
         _cargoInHold.Add(cargoAdded);
         CheckForFreeCargoSpace();
         SetCargoUI();
+        _crewHandler.GainOneCrew();
     }
 
     public bool CheckCanModifyCargoCapacity()
