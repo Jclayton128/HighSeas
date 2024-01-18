@@ -4853,7 +4853,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetMarkerPrefab: {fileID: 8639648936275473712, guid: d53cc59a6feb8e2429f03d155d8c6efc, type: 3}
-  _scanRange: 5
+  _scanRange: 3
   _timeBetweenScans: 0.5
   _timeBetweenShots: 2
   _shotSpeed: 2

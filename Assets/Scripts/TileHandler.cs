@@ -123,8 +123,8 @@ public class TileHandler : MonoBehaviour
         }
         else if (_tileObject == TileController.TileObject.Castle)
         {
-            if (!Castle) Castle = GetComponentInChildren<CannonHandler>().transform.parent.gameObject;
-            if (Castle ) return;
+            //if (!Castle) Castle = GetComponentInChildren<CannonHandler>().transform.parent.gameObject;
+            if (Castle) return;
             _srObject.sprite = null;
             Castle = Instantiate(_castlePrefab, transform);
         }

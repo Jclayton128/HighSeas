@@ -138,6 +138,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9136332958006662721, guid: e47e107891b521b4eba409097bdbf7cd, type: 3}
+      propertyPath: _scanRange
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9136332958006662721, guid: e47e107891b521b4eba409097bdbf7cd, type: 3}
       propertyPath: _cannonLevel
       value: 1
       objectReference: {fileID: 0}

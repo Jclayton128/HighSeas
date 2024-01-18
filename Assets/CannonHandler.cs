@@ -8,7 +8,7 @@ public class CannonHandler : MonoBehaviour
     [SerializeField] TargetHandler _targetMarkerPrefab = null;
 
     //Settings
-    [SerializeField] float _scanRange = 4f;
+    [SerializeField] float _scanRange = 3f;
     [SerializeField] float _timeBetweenScans = 0.5f;
     Vector3 _targetMarkerHoldingPosition = Vector3.one * 1000;
     [SerializeField] float _timeBetweenShots = 3f;
@@ -59,7 +59,7 @@ public class CannonHandler : MonoBehaviour
             if (Time.time >= _timeForNextShot)
             {
                 Shoot();
-                _timeForNextShot = Time.time + (_timeBetweenShots/_cannonLevel);
+                _timeForNextShot = Time.time + (_timeBetweenShots);
             }
         }
         else
@@ -113,5 +113,12 @@ public class CannonHandler : MonoBehaviour
     public void SetCannonLevel(int level)
     {
         _cannonLevel = level;
+
+        if (_cannonLevel == 2)
+        {
+            _scanRange *= 1.6f;
+            _timeBetweenShots *= .8f;
+        }
+        
     }
 }
