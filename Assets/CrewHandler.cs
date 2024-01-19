@@ -23,6 +23,12 @@ public class CrewHandler : MonoBehaviour
         CrewCountChanged?.Invoke(_currentCrew);
     }
 
+    public void GainFullCrew()
+    {
+        _currentCrew = _maxCrew;
+        CrewCountChanged?.Invoke(_currentCrew);
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         CannonballHandler ch;

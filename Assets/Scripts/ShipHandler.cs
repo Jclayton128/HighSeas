@@ -9,11 +9,13 @@ public class ShipHandler : MonoBehaviour
     public Action<List<CargoLibrary.CargoType>, int> CargoChanged;
 
     [SerializeField] SpriteRenderer _baseShipSR = null;
+    [SerializeField] SpriteRenderer[] _sailSRs = null;
+    [SerializeField] SpriteRenderer[] _cargoSlots = null;
     AIPath _ai;
 
     //settings
-    int _maxSailingLevels = 3;
-    int _startingSailingLevels = 1;
+    int _maxSailingLevels = 2;
+    int _startingSailingLevels = 0;
 
     int _maxCannonLevels = 2;
     int _startingCannonLevels = 0;
@@ -43,6 +45,7 @@ public class ShipHandler : MonoBehaviour
     int _upgradeCount = 0;
     CrewHandler _crewHandler;
     public Vector3 Velocity { get; private set; }
+    bool _hasCrew = true;
 
     private void Awake()
     {
@@ -54,6 +57,29 @@ public class ShipHandler : MonoBehaviour
         _ai = GetComponent<AIPath>();
         _cargoInHold = new List<CargoLibrary.CargoType>();
         _crewHandler = GetComponent<CrewHandler>();
+        _crewHandler.CrewCountAtZero += HandleZeroCrew;
+        _crewHandler.CrewCountChanged += HandleCrewReturned;
+    }
+
+
+    private void OnDestroy()
+    {
+        _crewHandler.CrewCountAtZero -= HandleZeroCrew;
+    }
+
+    private void HandleZeroCrew()
+    {
+        _hasCrew = false;
+        _ai.maxSpeed = 0;
+        gameObject.tag = "Dinghy";
+    }
+
+    private void HandleCrewReturned(int count)
+    {
+        if (_hasCrew) return;
+        _hasCrew = true;
+        _ai.maxSpeed = BalanceLibrary.Instance.GetSpeedByCount(_currentSailingLevel);
+        gameObject.tag = "Targetable";
     }
 
     private void Start()
@@ -65,8 +91,28 @@ public class ShipHandler : MonoBehaviour
 
     public void SetupShip(int index, ActorHandler handler)
     {
-        _baseShipSR.color = PlayerLibrary.Instance.GetPlayerColor(index);
         _actor = handler;
+        RenderShip();
+    }
+
+    private void RenderShip()
+    {
+        _baseShipSR.sprite = PlayerLibrary.Instance.GetShipBaseSpriteByCannon(_cannonHandler.CannonLevel);
+
+        foreach (var sr in _sailSRs) sr.sprite = null;
+
+        for (int i = 0; i <= _currentSailingLevel; i++)
+        {
+            _sailSRs[i].sprite = PlayerLibrary.Instance.GetSailSprite(_actor.ActorIndex, i);
+        }
+
+        foreach (var cargoSlot in _cargoSlots) cargoSlot.sprite = null;
+
+        for (int i = 0; i < _cargoInHold.Count; i++)
+        {
+            _cargoSlots[i].sprite = CargoLibrary.Instance.GetCargoSprite(_cargoInHold[i]);
+        }
+
     }
 
     #region Movement
@@ -101,6 +147,7 @@ public class ShipHandler : MonoBehaviour
 
         CheckForFreeCargoSpace();
         SetCargoUI();
+        RenderShip();
     }
 
     public void AddOneCargo(CargoLibrary.CargoType cargoAdded)
@@ -111,6 +158,7 @@ public class ShipHandler : MonoBehaviour
         CheckForFreeCargoSpace();
         SetCargoUI();
         _crewHandler.GainOneCrew();
+        RenderShip();
     }
 
     public bool CheckCanModifyCargoCapacity()
@@ -182,6 +230,7 @@ public class ShipHandler : MonoBehaviour
             case SmithLibrary.SmithType.Sails:
                 _currentSailingLevel++;
                 _ai.maxSpeed = BalanceLibrary.Instance.GetSpeedByCount(_currentSailingLevel);
+                RenderShip();
                 break;
 
             case SmithLibrary.SmithType.Cargo:
@@ -191,6 +240,7 @@ public class ShipHandler : MonoBehaviour
 
             case SmithLibrary.SmithType.Cannon:
                 _cannonHandler.SetCannonLevel(_cannonHandler.CannonLevel + 1);
+                RenderShip();
                 break;
         }
         _upgradeCount++;

@@ -21,6 +21,7 @@ public class ActorHandler : MonoBehaviour
     //Refs
     [SerializeField] DestinationHandler _destination;
     [SerializeField] ShipHandler _ship;
+    public ShipHandler Ship => _ship;
     [SerializeField] ActorUIHandler _ui;
 
     //state
@@ -59,6 +60,7 @@ public class ActorHandler : MonoBehaviour
 
     private void HandleCrewAtZero()
     {
+        ActorController.Instance.DispatchDinghy(_actorIndex);
         Debug.Log("Crew at zero!");
     }
 

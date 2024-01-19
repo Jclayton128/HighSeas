@@ -13,6 +13,11 @@ public class PlayerLibrary : MonoBehaviour
     [SerializeField] string[] _shipNames = null;
     [SerializeField] Sprite[] _crewSprites = null;
     [SerializeField] Sprite _blankCrew = null;
+    [SerializeField] Sprite[] _blueSails = null;
+    [SerializeField] Sprite[] _greenSails = null;
+    [SerializeField] Sprite[] _redSails = null;
+    [SerializeField] Sprite[] _yellowSails = null;
+    [SerializeField] Sprite[] _baseShipsByCannon = null;
     
 
     //state
@@ -60,5 +65,28 @@ public class PlayerLibrary : MonoBehaviour
     {
         if (playerIndex < 0) return _blankCrew;
         return _crewSprites[playerIndex];
+    }
+
+    public Sprite GetSailSprite(int playerIndex, int sailLevel)
+    {
+        switch (playerIndex)
+        {
+            case 0:
+                return _blueSails[sailLevel];
+            case 1:
+                return _greenSails[sailLevel];
+            case 2:
+                return _redSails[sailLevel];
+            case 3:
+                return _yellowSails[sailLevel - 1];
+
+            default: return null;
+
+        }
+    }
+
+    public Sprite GetShipBaseSpriteByCannon(int cannonLevel)
+    {
+        return _baseShipsByCannon[cannonLevel];
     }
 }

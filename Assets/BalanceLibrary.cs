@@ -47,10 +47,10 @@ public class BalanceLibrary : MonoBehaviour
         return cost;
     }
 
-    public float GetSpeedByCount(int previousUpgrades)
+    public float GetSpeedByCount(int sailingLevel)
     {
-        if (previousUpgrades >= _speeds.Count) return _speeds[_speeds.Count-1];
-        return _speeds[previousUpgrades];
+        if (sailingLevel >= _speeds.Count) return _speeds[_speeds.Count-1];
+        return _speeds[sailingLevel];
     }
 
 

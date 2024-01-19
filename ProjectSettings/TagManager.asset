@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Targetable
+  - Dinghy
   layers:
   - Default
   - TransparentFX
@@ -16,7 +17,7 @@ TagManager:
   - Tile_NonTraverse
   - Ship
   - Cannonball
-  - 
+  - Dinghy
   - 
   - 
   - 

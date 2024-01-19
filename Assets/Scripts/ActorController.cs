@@ -10,9 +10,11 @@ public class ActorController : MonoBehaviour
     //settings
     [SerializeField] TileHandler[] _startingTiles = null;
     [SerializeField] ActorUIHandler[] _uiHandlers = null;
+    [SerializeField] DInghyHandler _dingyPrefab = null;
     
     //state
     [SerializeField] List<ActorHandler> _activeActors = new List<ActorHandler>();
+    List<DInghyHandler> _activeDinghys = new List<DInghyHandler>();
 
     public void RegisterNewPlayerAsActor(PlayerInput newPlayer)
     {
@@ -41,6 +43,20 @@ public class ActorController : MonoBehaviour
         {
             actor.ModifyCoins(10);
         }
+    }
+
+    public void DispatchDinghy(int actorIndex)
+    {
+        DInghyHandler newDinghy = Instantiate(
+            _dingyPrefab, _startingTiles[actorIndex].transform.position, Quaternion.identity);
+        newDinghy.InitializeDinghy(_activeActors[actorIndex].Ship);
+
+        _activeDinghys.Add(newDinghy);
+    }
+
+    public void DeregisterDinghy(DInghyHandler completedDinghy)
+    {
+        _activeDinghys.Remove(completedDinghy);
     }
 
 }
