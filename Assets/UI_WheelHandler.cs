@@ -80,8 +80,11 @@ public class UI_WheelHandler : MonoBehaviour
             _currentStep = 0;
         }
         _angleWheel.z += _rotationPerStep;
+        UIController.Instance.HandleWheelRotationStarted();
         _turnTween.Kill();
-        _turnTween = _wheelImage_cells.transform.DOLocalRotate(_angleWheel, _timePerStep, RotateMode.Fast).SetEase(Ease.OutElastic);
+        _turnTween = _wheelImage_cells.transform.
+            DOLocalRotate(_angleWheel, _timePerStep, RotateMode.Fast).
+            SetEase(Ease.OutElastic).OnComplete(UIController.Instance.HandleWheelRotationComplete);
     }
 
     [ContextMenu("Decrement")]
@@ -93,7 +96,10 @@ public class UI_WheelHandler : MonoBehaviour
             _currentStep = 7;
         }
         _angleWheel.z -= _rotationPerStep;
+        UIController.Instance.HandleWheelRotationStarted();
         _turnTween.Kill();
-        _turnTween = _wheelImage_cells.transform.DOLocalRotate(_angleWheel, _timePerStep, RotateMode.Fast).SetEase(Ease.OutElastic);
+        _turnTween = _wheelImage_cells.transform.
+            DOLocalRotate(_angleWheel, _timePerStep, RotateMode.Fast)
+            .SetEase(Ease.OutElastic).OnComplete(UIController.Instance.HandleWheelRotationComplete);
     }
 }

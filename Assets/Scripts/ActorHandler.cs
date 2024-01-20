@@ -31,16 +31,19 @@ public class ActorHandler : MonoBehaviour
     int _currentCoins = 0;
     CrewHandler _crewHandler;
 
-    public void SetupNewActor(int playerIndex, TileHandler startingTile, ActorUIHandler ui)
+    public void SetupNewActor(int playerIndex, ActorUIHandler ui)
     {
-        _actorIndex = playerIndex;
+        _actorIndex = playerIndex;        
+        _ui = ui;
+        _ui.AssignActor(this, playerIndex);
+    }
 
+    public void SetupShip(int playerIndex, TileHandler startingTile)
+    {
         _destination = Instantiate(_destinationPrefab, startingTile.transform.position, Quaternion.identity).
             GetComponent<DestinationHandler>();
         _ship = Instantiate(_shipPrefab, startingTile.transform.position, Quaternion.identity).
             GetComponent<ShipHandler>();
-        _ui = ui;
-        _ui.AssignActor(this, playerIndex);
 
         _destination.SetPlayerIndex(playerIndex);
         _ship.SetupShip(playerIndex, this);
@@ -50,7 +53,12 @@ public class ActorHandler : MonoBehaviour
         _crewHandler = _ship.GetComponent<CrewHandler>();
         _crewHandler.CrewCountChanged += HandleCrewChanged;
         _crewHandler.CrewCountAtZero += HandleCrewAtZero;
+    }
 
+    public void NullifyActorAtGameEnd()
+    {
+        Ship.NullifyShip();
+        _destination.gameObject.SetActive(false);
     }
 
     private void HandleCrewChanged(int obj)
@@ -77,12 +85,57 @@ public class ActorHandler : MonoBehaviour
     private void OnMove(InputValue value)
     {
         Vector2 move = value.Get<Vector2>();
-
         int moveDir = ConvertMoveVec2IntoInt(move);
-        _destination.CommandMove(moveDir);
+        if (GameController.Instance.Context == UIController.Context.Gameplay)
+        {
+            _destination.CommandMove(moveDir);
+        }
+        else if (GameController.Instance.Context == UIController.Context.Title)
+        {
+            if (moveDir == 0)
+            {
+                GameController.Instance.RequestNewGameContext(UIController.Context.Pretitle);
+            }
+            else if (moveDir == 2)
+            {
+                GameController.Instance.RequestNewGameContext(UIController.Context.Wheel);
+            }
+
+        }
+        else if (GameController.Instance.Context == UIController.Context.Wheel)
+        {
+            if (moveDir == 0)
+            {
+                GameController.Instance.RequestNewGameContext(UIController.Context.Title);
+            }
+            else if (moveDir == 2)
+            {
+                GameController.Instance.EnterCurrentWheelOption();
+            }
+            else if (moveDir == 1)
+            {
+                GameController.Instance.RequestWheelRotation(1);
+            }
+            else if (moveDir == 3)
+            {
+                GameController.Instance.RequestWheelRotation(-1);
+            }
+
+
+        }
+        else if (GameController.Instance.Context == UIController.Context.GameOver)
+        {
+
+        }
+
 
     }
 
+    /// <summary>
+    /// 0: North, 1: East, 2: South, 3: West
+    /// </summary>
+    /// <param name="move"></param>
+    /// <returns></returns>
     private int ConvertMoveVec2IntoInt(Vector2 move)
     {
         if (move.y > 0)

@@ -10,9 +10,8 @@ public class CityHandler : MonoBehaviour
     public Action<CargoLibrary.CargoType> CargoOnloadCompleted;
     public Action<CargoLibrary.CargoType, int> CargoOffloadCompleted;
 
-
+    [SerializeField] Canvas _canvas = null;
     [SerializeField] SpriteRenderer _sr = null;
-
     [SerializeField] RectTransform[] _slots = null;
     [SerializeField] Image[] _tripleProduction = null;
 
@@ -32,6 +31,7 @@ public class CityHandler : MonoBehaviour
 
 
     //state
+    bool _isActive = false;
     [SerializeField] CargoLibrary.CargoType _cargoType = CargoLibrary.CargoType.Cargo0;
     public CargoLibrary.CargoType CargoType => _cargoType;
     [SerializeField] float[] _demands = new float[4];
@@ -54,6 +54,7 @@ public class CityHandler : MonoBehaviour
     #region Startup
     void Start()
     {
+        HandleGameEnded();
         CityController.Instance.RegisterCity(this);
         _cargoType = CityController.Instance.GetNextCargoType();
         _sr.sprite = TileLibrary.Instance.GetRandomCitySprite();
@@ -64,6 +65,27 @@ public class CityHandler : MonoBehaviour
         UpdateProductionImages();
         UpdateDemandIcons();
         UpdateProductionRings();
+
+        GameController.Instance.GameModeStarted += HandleGameStarted;
+        GameController.Instance.GameModeEnded += HandleGameEnded;
+    }
+
+    private void OnDestroy()
+    {
+        GameController.Instance.GameModeStarted -= HandleGameStarted;
+        GameController.Instance.GameModeEnded -= HandleGameEnded;
+    }
+
+    private void HandleGameStarted()
+    {
+        _canvas.enabled = true;
+        _isActive = true;
+    }
+
+    private void HandleGameEnded()
+    {
+        _canvas.enabled = false;
+        _isActive = false;
     }
 
     private void AssignProductionSprites()
@@ -157,6 +179,7 @@ public class CityHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!_isActive) return;
         _timeSinceLastUpdate += Time.deltaTime;
         if (_timeSinceLastUpdate >= 0.5f)
         {

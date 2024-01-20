@@ -115,6 +115,13 @@ public class ShipHandler : MonoBehaviour
 
     }
 
+    public void NullifyShip()
+    {
+        _ai.maxSpeed = 0;
+        _cannonHandler.NullifyCannon();
+        //_ai.maxSpeed = BalanceLibrary.Instance.GetSpeedByCount(_currentSailingLevel);
+    }
+
     #region Movement
 
     public void SetDestination(DestinationHandler dh)

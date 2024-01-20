@@ -40,6 +40,7 @@ public class CannonHandler : MonoBehaviour
             _targetMarker.SetPlayerIndex(_ship.Actor.ActorIndex);
         }
         _ps = GetComponent<ParticleSystem>();
+        CannonController.Instance.RegisterCannon(this);
     }
 
     private void Update()
@@ -67,6 +68,12 @@ public class CannonHandler : MonoBehaviour
             _shotsInStreak = 0;
             _targetMarker.transform.position = _targetMarkerHoldingPosition;
         }  
+    }
+
+    public void NullifyCannon()
+    {
+        _cannonLevel = 0;
+        _targetMarker.gameObject.SetActive(false);
     }
 
     private void Shoot()

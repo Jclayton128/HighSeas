@@ -49,6 +49,7 @@ MonoBehaviour:
   _smithTypeImage: {fileID: 12805529914091638}
   _upgradeRing: {fileID: 990072515219496920}
   _upgradeCostTMP: {fileID: 4355467952210767168}
+  _canvas: {fileID: 3690222107099557580}
 --- !u!1 &4664050665293307264
 GameObject:
   m_ObjectHideFlags: 0

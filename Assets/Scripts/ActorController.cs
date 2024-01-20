@@ -16,14 +16,42 @@ public class ActorController : MonoBehaviour
     [SerializeField] List<ActorHandler> _activeActors = new List<ActorHandler>();
     List<DInghyHandler> _activeDinghys = new List<DInghyHandler>();
 
+
+
     public void RegisterNewPlayerAsActor(PlayerInput newPlayer)
     {
         ActorHandler ah = newPlayer.GetComponent<ActorHandler>();
         _activeActors.Add(ah);
         int playerIndex = _activeActors.IndexOf(ah);
         //Debug.Log($"Added Player {playerIndex}");
-        ah.SetupNewActor(playerIndex, _startingTiles[playerIndex], _uiHandlers[playerIndex]);
+        ah.SetupNewActor(playerIndex, _uiHandlers[playerIndex]);
+    }
 
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    private void Start()
+    {
+        GameController.Instance.GameModeStarted += HandleGameplayStarted;
+        GameController.Instance.GameModeEnded += HandleGameplayEnded;
+    }
+
+    private void HandleGameplayStarted()
+    {
+        for (int i = 0; i< _activeActors.Count; i++)
+        {
+            _activeActors[i].SetupShip(i, _startingTiles[i]);
+        }
+    }
+
+    private void HandleGameplayEnded()
+    {
+        for (int i = 0; i < _activeActors.Count; i++)
+        {
+            _activeActors[i].NullifyActorAtGameEnd();
+        }
     }
 
     public void DeregisterPlayerAsActor(PlayerInput playerToRemove)
@@ -32,10 +60,7 @@ public class ActorController : MonoBehaviour
             _activeActors.Remove(playerToRemove.GetComponent<ActorHandler>());
     }
 
-    private void Awake()
-    {
-        Instance = this;
-    }
+
 
     public void Debug_GiveAllPlayers10Coins()
     {
@@ -59,6 +84,10 @@ public class ActorController : MonoBehaviour
         _activeDinghys.Remove(completedDinghy);
     }
 
+    public Transform GetShipTransformOfActor(int actorIndex)
+    {
+        return _activeActors[actorIndex].Ship.transform;
+    }
 }
 
 

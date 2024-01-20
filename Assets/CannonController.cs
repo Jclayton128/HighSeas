@@ -11,12 +11,26 @@ public class CannonController : MonoBehaviour
     //state
     float _cannonballSpeed = 2f;
     public float CannonballSpeed => _cannonballSpeed;
-    [SerializeField] List<CannonballHandler> _activeCannonBalls = new List<CannonballHandler>();
-    [SerializeField] Queue<CannonballHandler> _pooledCannonBalls = new Queue<CannonballHandler>();
+     List<CannonballHandler> _activeCannonBalls = new List<CannonballHandler>();
+    Queue<CannonballHandler> _pooledCannonBalls = new Queue<CannonballHandler>();
+    List<CannonHandler> _activeCannons = new List<CannonHandler>();
 
     private void Awake()
     {
         Instance = this;
+    }
+
+    public void RegisterCannon(CannonHandler newCannon)
+    {
+        _activeCannons.Add(newCannon);
+    }
+
+    public void NullifyAllCannons()
+    {
+        for (int i = 0; i < _activeCannons.Count; i++)
+        {
+            _activeCannons[i].NullifyCannon();
+        }
     }
 
     public CannonballHandler RequisitionCannonball()

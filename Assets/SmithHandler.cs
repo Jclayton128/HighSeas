@@ -15,8 +15,10 @@ public class SmithHandler : MonoBehaviour
     [SerializeField] Image _smithTypeImage = null;
     [SerializeField] Image _upgradeRing = null;
     [SerializeField] TextMeshProUGUI _upgradeCostTMP = null;
+    [SerializeField] Canvas _canvas = null;
 
     //state
+    bool _isActive = false;
     float _upgradeFactor = 0;
     int _upgradesGiven = 0;
     int _currentUpgradeCost = 0;
@@ -30,6 +32,26 @@ public class SmithHandler : MonoBehaviour
         SetSmithType();
         SetUpgradeCost();
         SmithController.Instance.RegisterSmith(this);
+        GameController.Instance.GameModeStarted += HandleGameStarted;
+        GameController.Instance.GameModeEnded += HandleGameEnded;
+        HandleGameEnded();
+    }
+    private void OnDestroy()
+    {
+        GameController.Instance.GameModeStarted -= HandleGameStarted;
+        GameController.Instance.GameModeEnded -= HandleGameEnded;
+    }
+
+    private void HandleGameStarted()
+    {
+        _canvas.enabled = true;
+        _isActive = true;
+    }
+
+    private void HandleGameEnded()
+    {
+        _canvas.enabled = false;
+        _isActive = false;
     }
 
     private void SetSmithType()
@@ -56,6 +78,7 @@ public class SmithHandler : MonoBehaviour
 
     private void Update()
     {
+        if (!_isActive) return;
         if (_isUpgrading)
         {
             _upgradeFactor += Time.deltaTime * BalanceLibrary.Instance.UpgradeRate;
