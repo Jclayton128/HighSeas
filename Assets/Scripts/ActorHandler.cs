@@ -120,12 +120,10 @@ public class ActorHandler : MonoBehaviour
             {
                 GameController.Instance.RequestWheelRotation(-1);
             }
-
-
         }
         else if (GameController.Instance.Context == UIController.Context.GameOver)
         {
-
+            if (moveDir == 2) GameController.Instance.RequestReloadAfterGameover(_actorIndex);
         }
 
 

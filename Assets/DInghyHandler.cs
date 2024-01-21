@@ -19,6 +19,14 @@ public class DInghyHandler : MonoBehaviour
         _ai.destination = _targetShip.transform.position;
     }
 
+    private void Update()
+    {
+        if ((transform.position - _ai.destination).magnitude < 0.1f)
+        {
+            _ai.destination = _targetShip.transform.position;
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         ShipHandler collShip;
@@ -30,7 +38,6 @@ public class DInghyHandler : MonoBehaviour
             }
             Destroy(gameObject);
         }
-
     }
 
 }

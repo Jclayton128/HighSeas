@@ -6,6 +6,10 @@ using DG.Tweening;
 public class RockingHandler : MonoBehaviour
 {
 
+    //settings
+    [SerializeField] float _amplitudeModifier = 1;
+    [SerializeField] float _periodModifier = 1;
+
     //state
     float _delta;
     bool _isRockingRight;
@@ -49,16 +53,18 @@ public class RockingHandler : MonoBehaviour
     {
         if (_isRockingRight)
         {
-            _rotation.z = MovementController.Instance.RockingAmplitude;
+            _rotation.z = MovementController.Instance.RockingAmplitude * _amplitudeModifier;
             _moveTween = transform.DOLocalRotate(_rotation, 
-                MovementController.Instance.RockingPeriod).SetEase(Ease.InOutSine).OnComplete(ToggleWaveLap);
+                MovementController.Instance.RockingPeriod * _periodModifier)
+                .SetEase(Ease.InOutSine).OnComplete(ToggleWaveLap);
 
         }
         else
         {
-            _rotation.z = -MovementController.Instance.RockingAmplitude;
+            _rotation.z = -MovementController.Instance.RockingAmplitude * _amplitudeModifier;
             _moveTween = transform.DOLocalRotate(_rotation,
-                MovementController.Instance.RockingPeriod).SetEase(Ease.InOutSine).OnComplete(ToggleWaveLap);
+                MovementController.Instance.RockingPeriod * _periodModifier)
+                .SetEase(Ease.InOutSine).OnComplete(ToggleWaveLap);
         }
     }
 

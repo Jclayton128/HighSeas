@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 
 public class UIController : MonoBehaviour
 {
@@ -12,12 +13,14 @@ public class UIController : MonoBehaviour
 
     //scene ref
     [SerializeField] RectTransform _titleImage = null;
+    [SerializeField] RectTransform _gameoverPanel = null;
     [SerializeField] RectTransform _wheel = null;
     [SerializeField] RectTransform _playerPanel_0 = null;
     [SerializeField] RectTransform _playerPanel_1 = null;
     [SerializeField] RectTransform _playerPanel_2 = null;
     [SerializeField] RectTransform _playerPanel_3 = null;
     [SerializeField] UI_WheelHandler _wheelHandler = null;
+    [SerializeField] TextMeshProUGUI _helperTMP = null;
 
     //settings
     [SerializeField] float _tweenDuration = 2f;
@@ -41,13 +44,22 @@ public class UIController : MonoBehaviour
     Tween _playerPanelTween_2;
     Tween _playerPanelTween_3;
 
+    [SerializeField] float _gameoverPanel_off = 400f;
+    [SerializeField] float _gameoverPanel_down = 100f;
+    Tween _gameoverTween;
+
     bool _isSwappingContexts = false;
     public bool IsSwappingContext => _isSwappingContexts;
 
     bool _isRotatingWheel = false;
     public bool IsRotatingWheel => _isRotatingWheel;
 
+
+
     public enum Context { Pretitle, Title, Wheel, Gameplay, GameOver}
+
+
+
     private void Awake()
     {
         Instance = this;
@@ -67,6 +79,7 @@ public class UIController : MonoBehaviour
     public void HandleWheelRotationStarted()
     {
         _isRotatingWheel = true;
+        //JUICE TODO play a wheel turning creak
     }
 
     public int IncreaseWheelAndGetCurrentStep()
@@ -106,6 +119,11 @@ public class UIController : MonoBehaviour
                 _playerPanelTween_3 = _playerPanel_3.DOAnchorPosX(_playerPanel_offLeft, duration);
                 _playerPanelTween_1 = _playerPanel_1.DOAnchorPosX(_playerPanel_offRight, duration);
                 _playerPanelTween_2 = _playerPanel_2.DOAnchorPosX(_playerPanel_offRight, duration);
+
+                _helperTMP.CrossFadeAlpha(0, 0.001f, false);
+
+                _gameoverTween.Kill();
+                _gameoverTween = _gameoverPanel.DOAnchorPosY(_gameoverPanel_off, duration);
                 break;
 
             case Context.Title:
@@ -125,6 +143,9 @@ public class UIController : MonoBehaviour
                 _playerPanelTween_3 = _playerPanel_3.DOAnchorPosX(_playerPanel_offLeft, duration);
                 _playerPanelTween_1 = _playerPanel_1.DOAnchorPosX(_playerPanel_offRight, duration);
                 _playerPanelTween_2 = _playerPanel_2.DOAnchorPosX(_playerPanel_offRight, duration);
+
+                _gameoverTween.Kill();
+                _gameoverTween = _gameoverPanel.DOAnchorPosY(_gameoverPanel_off, duration);
                 break;
 
             case Context.Wheel:
@@ -143,6 +164,9 @@ public class UIController : MonoBehaviour
                 _playerPanelTween_3 = _playerPanel_3.DOAnchorPosX(_playerPanel_offLeft, duration);
                 _playerPanelTween_1 = _playerPanel_1.DOAnchorPosX(_playerPanel_offRight, duration);
                 _playerPanelTween_2 = _playerPanel_2.DOAnchorPosX(_playerPanel_offRight, duration);
+
+                _gameoverTween.Kill();
+                _gameoverTween = _gameoverPanel.DOAnchorPosY(_gameoverPanel_off, duration);
                 break;
 
             case Context.Gameplay:
@@ -161,6 +185,10 @@ public class UIController : MonoBehaviour
                 _playerPanelTween_3 = _playerPanel_3.DOAnchorPosX(_playerPanel_inLeft, duration);
                 _playerPanelTween_1 = _playerPanel_1.DOAnchorPosX(_playerPanel_inRight, duration);
                 _playerPanelTween_2 = _playerPanel_2.DOAnchorPosX(_playerPanel_inRight, duration);
+                _helperTMP.CrossFadeAlpha(0, duration/2f, false);
+
+                _gameoverTween.Kill();
+                _gameoverTween = _gameoverPanel.DOAnchorPosY(_gameoverPanel_off, duration);
                 break;
 
             case Context.GameOver:
@@ -179,25 +207,19 @@ public class UIController : MonoBehaviour
                 _playerPanelTween_3 = _playerPanel_3.DOAnchorPosX(_playerPanel_offLeft, duration);
                 _playerPanelTween_1 = _playerPanel_1.DOAnchorPosX(_playerPanel_offRight, duration);
                 _playerPanelTween_2 = _playerPanel_2.DOAnchorPosX(_playerPanel_offRight, duration);
+                _helperTMP.CrossFadeAlpha(0, 0.001f, false);
+
+                _gameoverTween.Kill();
+                _gameoverTween = _gameoverPanel.DOAnchorPosY(_gameoverPanel_down, duration);
                 break;
         }
     }
 
-    [ContextMenu("set pretitle")]
-    public void SetPretitle()
+    public void SetHelperText(string text)
     {
-        SetContext(Context.Pretitle, _tweenDuration);
+        _helperTMP.CrossFadeAlpha(1, _tweenDuration, false);
+        _helperTMP.text = text;
     }
 
-    [ContextMenu("set title")]
-    public void SetTitle()
-    {
-        SetContext(Context.Title, _tweenDuration);
-    }
 
-    [ContextMenu("set wheel")]
-    public void SetWheel()
-    {
-        SetContext(Context.Wheel, _tweenDuration);
-    }
 }

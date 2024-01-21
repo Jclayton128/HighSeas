@@ -71,7 +71,6 @@ public class UI_WheelHandler : MonoBehaviour
     }
 
 
-    [ContextMenu("Increment")]
     public void IncrementTurn()
     {
         _currentStep++;
@@ -83,11 +82,10 @@ public class UI_WheelHandler : MonoBehaviour
         UIController.Instance.HandleWheelRotationStarted();
         _turnTween.Kill();
         _turnTween = _wheelImage_cells.transform.
-            DOLocalRotate(_angleWheel, _timePerStep, RotateMode.Fast).
-            SetEase(Ease.OutElastic).OnComplete(UIController.Instance.HandleWheelRotationComplete);
+            DOLocalRotate(_angleWheel, _timePerStep, RotateMode.FastBeyond360).
+            SetEase(Ease.InOutBack).OnComplete(UIController.Instance.HandleWheelRotationComplete);
     }
 
-    [ContextMenu("Decrement")]
     public void DecrementTurn()
     {
         _currentStep--;
@@ -99,7 +97,7 @@ public class UI_WheelHandler : MonoBehaviour
         UIController.Instance.HandleWheelRotationStarted();
         _turnTween.Kill();
         _turnTween = _wheelImage_cells.transform.
-            DOLocalRotate(_angleWheel, _timePerStep, RotateMode.Fast)
-            .SetEase(Ease.OutElastic).OnComplete(UIController.Instance.HandleWheelRotationComplete);
+            DOLocalRotate(_angleWheel, _timePerStep, RotateMode.FastBeyond360)
+            .SetEase(Ease.InOutBack).OnComplete(UIController.Instance.HandleWheelRotationComplete);
     }
 }

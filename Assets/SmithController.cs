@@ -36,4 +36,9 @@ public class SmithController : MonoBehaviour
             smith.Debug_DevelopSmith();
         }
     }
+
+    public Transform GetTransformOfSmith(int smithIndex)
+    {
+        return _smiths[smithIndex].transform;
+    }
 }

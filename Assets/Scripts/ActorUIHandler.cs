@@ -34,15 +34,18 @@ public class ActorUIHandler : MonoBehaviour
 
         _panel.sprite = PlayerLibrary.Instance.GetPanel(playerIndex);
         _playerNameTMP.text = PlayerLibrary.Instance.GetRandomAvailableShipName();
+        StatsController.Instance.RegisterPlayerName(_playerNameTMP.text, playerIndex);
         _playerRank.sprite = PlayerLibrary.Instance.GetRank(0);
 
-        HandleUpdatedCoinCount(0);
+
 
         actor.ActorCoinCountUpdated += HandleUpdatedCoinCount;
         actor.ActorRankUpdated += HandleRankUpdated;
         actor.ActorCargoSlotsUpdated += HandleUpdatedSlots;
         actor.ActorCrewUpdated += HandleUpdatedCrew;
 
+        HandleUpdatedCoinCount(0);
+        HandleUpdatedCrew(5);
     }
 
 

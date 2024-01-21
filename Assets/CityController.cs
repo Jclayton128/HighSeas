@@ -35,4 +35,9 @@ public class CityController : MonoBehaviour
             city.Debug_DevelopCity();
         }
     }
+
+    public Transform GetTransformOfCity(int cityIndex)
+    {
+        return _cities[cityIndex].transform;
+    }
 }

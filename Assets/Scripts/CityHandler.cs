@@ -169,7 +169,7 @@ public class CityHandler : MonoBehaviour
         for (int i = 0; i < _demands.Length; i++)
         {
             if ((int)_cargoType == i) continue;
-            _demandRates[i] = UnityEngine.Random.Range(0.01f, 0.03f)/2;
+            _demandRates[i] = UnityEngine.Random.Range(0.01f, 0.03f)/6;
         }
     }
 

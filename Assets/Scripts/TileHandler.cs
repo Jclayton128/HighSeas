@@ -19,6 +19,7 @@ public class TileHandler : MonoBehaviour
     [SerializeField] CityHandler _cityPrefab = null;
     [SerializeField] SmithHandler _smithPrefab = null;
     [SerializeField] GameObject _castlePrefab = null;
+    [SerializeField] TutorialHandler _tutorialDudePrefab = null;
 
 
     //state
