@@ -10,8 +10,8 @@ public class GameController : MonoBehaviour
     public Action GameModeEnded;
     public static GameController Instance { get; private set; }
 
-    public enum WheelOptions { EnterRegularGame0, EnterTutorialGame1, AdjustMusic2, AdjustSound3,
-        Credits4, Option5, Option6, Option7}
+    public enum WheelOptions { EnterRegularGame0, EnterTutorialGame1, Option2, Option3,
+        Option4, Option5, Option6, Option7}
 
     //settings
     [SerializeField] int _coinsRequiredToWin = 50;
@@ -20,6 +20,7 @@ public class GameController : MonoBehaviour
     [SerializeField] string _leftRightToSelect = "Left/Right To Rotate, Down To Select";
     [SerializeField] string _startNewGame = $"Multiplayer Game (Race to 50 Coins)";
     [SerializeField] string _startTutorial = $"Single Player Tutorial";
+    [SerializeField] string _placeholderOption = $"Placeholder option...";
     [SerializeField] string _adjustSound = $"Left/Right to Adjust Sound, Up to return";
     [SerializeField] string _adjustMusic = $"Left/Right to Adjust Music, Up to return";
     [SerializeField] string _viewCredits = $"Credits go here. Up to return";
@@ -95,7 +96,7 @@ public class GameController : MonoBehaviour
             case UIController.Context.Title:
                 UIController.Instance.SetContext(UIController.Context.Title);
                 _currentContext = UIController.Context.Title;
-                UIController.Instance.SetHelperText(_pressDownToStart);
+                Invoke(nameof(Delay_EnterTitleContext), 2f);
                 break;
 
             case UIController.Context.Wheel:
@@ -111,6 +112,11 @@ public class GameController : MonoBehaviour
                 break;
         }
         return true;
+    }
+
+    private void Delay_EnterTitleContext()
+    {
+        UIController.Instance.SetHelperText(_pressDownToStart);
     }
 
     public void RequestWheelRotation(int stepDirection)
@@ -140,31 +146,31 @@ public class GameController : MonoBehaviour
                 text = _startTutorial;
                 break;
 
-            case WheelOptions.AdjustMusic2:
-                text = _adjustMusic;
+            case WheelOptions.Option2:
+                text = _placeholderOption;
                 break;
 
-            case WheelOptions.AdjustSound3:
-                text = _adjustSound;
+            case WheelOptions.Option3:
+                text = _placeholderOption;
                 break;
 
-            case WheelOptions.Credits4:
-                text = _viewCredits;
+            case WheelOptions.Option4:
+                text = _placeholderOption;
                 break;
 
             case WheelOptions.Option5:
-                text = _viewCredits;
+                text = _placeholderOption;
                 break;
 
             case WheelOptions.Option6:
-                text = _viewCredits;
+                text = _placeholderOption;
                 break;
 
             case WheelOptions.Option7:
-                text = _viewCredits;
+                text = _placeholderOption;
                 break;
 
-            default: text = _viewCredits;
+            default: text = _placeholderOption;
 
                 break;
         }
