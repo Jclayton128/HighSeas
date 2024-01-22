@@ -6,9 +6,10 @@ using UnityEngine;
 public class TutorialStep : ScriptableObject
 {
     public enum SpecialOptions { None, ZoomOnPlayer, ZoomOnFirstCity,
-        ZoomOnFirstSmith, ZoomOnCastle}
+        ZoomOnFirstSmith, ZoomOnCastle, EndTutorial}
 
-    public enum ClearingOptions { TimeDelay, ContactTutorialDude, PressDown};
+    public enum ClearingOptions { TimeDelay, ContactTutorialDude, PressDown, LoadCargo,
+        SellCargo, PressMoveButton};
 
     [Multiline(3)] [SerializeField] string _tutorialText = "default text";
     [SerializeField] Sprite[] _sprites = null;
@@ -29,5 +30,6 @@ public class TutorialStep : ScriptableObject
 
     [SerializeField] SpecialOptions _specialOption = SpecialOptions.None;
     public SpecialOptions SpecialOption => _specialOption;
+
 
 }

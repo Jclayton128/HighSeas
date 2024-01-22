@@ -17,9 +17,9 @@ public class GameController : MonoBehaviour
     [SerializeField] int _coinsRequiredToWin = 50;
     [SerializeField] int _winningActorIndex = -1;
     [SerializeField] string _pressDownToStart = "Press Down";
-    [SerializeField] string _leftRightToSelect = "Left/Right To Select, Down To Confirm";
-    [SerializeField] string _startNewGame = $"Down to Start New Game (Race to 50 Coins)";
-    [SerializeField] string _startTutorial = $"Down to Start Tutorial";
+    [SerializeField] string _leftRightToSelect = "Left/Right To Rotate, Down To Select";
+    [SerializeField] string _startNewGame = $"Multiplayer Game (Race to 50 Coins)";
+    [SerializeField] string _startTutorial = $"Single Player Tutorial";
     [SerializeField] string _adjustSound = $"Left/Right to Adjust Sound, Up to return";
     [SerializeField] string _adjustMusic = $"Left/Right to Adjust Music, Up to return";
     [SerializeField] string _viewCredits = $"Credits go here. Up to return";
@@ -55,6 +55,7 @@ public class GameController : MonoBehaviour
 
     private void StartTutorialGameplay()
     {
+        _coinsRequiredToWin = 10;
         TutorialController.Instance.StartTutorial();
         if (RequestNewGameContext(UIController.Context.Gameplay)) GameModeStarted?.Invoke();
     }
@@ -173,6 +174,7 @@ public class GameController : MonoBehaviour
 
     public void EnterCurrentWheelOption()
     {
+        if (UIController.Instance.IsSwappingContext) return;
         switch (_currentWheelOption)
         {
             case WheelOptions.EnterRegularGame0:

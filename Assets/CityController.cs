@@ -40,4 +40,9 @@ public class CityController : MonoBehaviour
     {
         return _cities[cityIndex].transform;
     }
+
+    public void Debug_DemoCityByIndex(int indexToDemo)
+    {
+        _cities[indexToDemo].Debug_DemoCity();
+    }
 }

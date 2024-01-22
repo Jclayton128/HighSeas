@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class TutorialController : MonoBehaviour
 {
@@ -21,13 +22,18 @@ public class TutorialController : MonoBehaviour
     float _timeToPushTutorial = 0;
     TutorialStep.ClearingOptions _currentClearingOption;
     float _timeToAutoClear;
-    TutorialHandler _currentTutorialDude;
+    [SerializeField] TutorialHandler _currentTutorialDude;
     TutorialStep _currentTutStep;
 
 
     private void Awake()
     {
         Instance = this;
+        HideTutorialElements();
+    }
+
+    private void HideTutorialElements()
+    {
         _tutorialBackground.CrossFadeAlpha(0, 0.0001f, false);
         foreach (var image in _tutorialImages)
         {
@@ -53,7 +59,16 @@ public class TutorialController : MonoBehaviour
 
         if (Time.time >= _timeToAutoClear)
         {
-            AdvanceTutorial();
+            if (_currentTutStep.SpecialOption == TutorialStep.SpecialOptions.EndTutorial)
+            {
+                _isInTutorialMode = false;
+                HideTutorialElements();
+            }
+            else
+            {
+                AdvanceTutorial();
+            }
+
         }
     }
 
@@ -84,6 +99,7 @@ public class TutorialController : MonoBehaviour
         {
             CameraController.Instance.SetZoom(CameraController.ZoomLevel.Close,
                CityController.Instance.GetTransformOfCity(0));
+            CityController.Instance.Debug_DemoCityByIndex(0);
         }
         else if(_currentTutStep.SpecialOption == TutorialStep.SpecialOptions.ZoomOnFirstSmith)
         {
@@ -101,9 +117,9 @@ public class TutorialController : MonoBehaviour
 
         if (_currentTutStep.HasTutorialDude)
         {
-            Destroy(_currentTutorialDude.gameObject);
             _currentTutorialDude = Instantiate(_tutorialDudePrefab, _currentTutStep.TutorialDudeLocation, Quaternion.identity);
         }
+
 
     }
 
@@ -133,5 +149,49 @@ public class TutorialController : MonoBehaviour
         {
             _timeToAutoClear = Mathf.Infinity;
         }
+
+        if (_currentClearingOption == TutorialStep.ClearingOptions.LoadCargo)
+        {
+            ActorController.Instance.GetFirstPlayer().ActorCargoLoaded += HandleCargoLoaded;
+        }
+        else if (_currentClearingOption == TutorialStep.ClearingOptions.SellCargo)
+        {
+            ActorController.Instance.GetFirstPlayer().ActorCargoSold += HandleCargoSold;
+        }
+        else if (_currentClearingOption == TutorialStep.ClearingOptions.PressMoveButton)
+        {
+            ActorController.Instance.GetFirstPlayer().ActorMoveButtonPressed += HandleMoveButtonPressed;
+        }
     }
+
+    private void HandleMoveButtonPressed()
+    {
+        if (_currentClearingOption == TutorialStep.ClearingOptions.PressMoveButton)
+        {
+            ActorController.Instance.GetFirstPlayer().ActorMoveButtonPressed -= HandleMoveButtonPressed;
+            AdvanceTutorial();
+            
+        }    
+    }
+
+    private void HandleCargoSold()
+    {
+        if (_currentClearingOption == TutorialStep.ClearingOptions.SellCargo)
+        {
+            ActorController.Instance.GetFirstPlayer().ActorCargoSold -= HandleCargoSold;
+            AdvanceTutorial();
+
+        }
+    }
+
+    private void HandleCargoLoaded()
+    {
+        if (_currentClearingOption == TutorialStep.ClearingOptions.LoadCargo)
+        {
+            AdvanceTutorial();
+            ActorController.Instance.GetFirstPlayer().ActorCargoLoaded -= HandleCargoLoaded;
+        }        
+    }
+
+
 }

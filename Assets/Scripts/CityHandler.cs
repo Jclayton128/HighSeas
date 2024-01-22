@@ -49,6 +49,7 @@ public class CityHandler : MonoBehaviour
     [SerializeField] bool _isOffloadingProduct = false;
     [SerializeField] float _offloadFactor = 0;
     [SerializeField] CargoLibrary.CargoType _cargoBeingOffloaded;
+    bool _hasBeenDemod = false;
 
 
     #region Startup
@@ -480,4 +481,17 @@ public class CityHandler : MonoBehaviour
     }
 
     #endregion
+    public void Debug_DemoCity()
+    {
+        if (_hasBeenDemod) return;
+        _hasBeenDemod = true;
+        _productionInStock = 2;
+        _currentProductionFactor = 0.1f;
+        UpdateProductionImages();
+
+        _demands[0] = 0f;
+        _demands[1] = 0.4f;
+        _demands[2] = .6f;
+        _demands[3] = 1f;
+    }
 }

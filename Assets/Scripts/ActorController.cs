@@ -89,6 +89,10 @@ public class ActorController : MonoBehaviour
         return _activeActors[actorIndex].Ship.transform;
     }
 
+    public ActorHandler GetFirstPlayer()
+    {
+        return _activeActors[0];
+    }
 }
 
 

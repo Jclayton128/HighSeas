@@ -10,15 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cbb7f6c121238094a93e98e81fe4d199, type: 3}
-  m_Name: Step_1
+  m_Name: Step_6
   m_EditorClassIdentifier: 
-  _tutorialText: "Your ship only has basic pathfinding, so you may want to \nnavigate
-    with multiple intermediate destinations to\n ensure the best route. \n\nReach
-    the Sailor to continue."
+  _tutorialText: 'Try sailing to a city to load a cargo. Remember to stay in port
+
+    long
+    enough for the cargo to be loaded on to your ship.
+
+
+    Load 1 cargo to continue.'
   _sprites: []
-  _hasTutorialDude: 1
-  _tutorialDudeLocation: {x: -8.68, y: 8.6, z: 0}
+  _hasTutorialDude: 0
+  _tutorialDudeLocation: {x: -4.96, y: 0.86, z: 0}
   _frontsideWaitTime: 0
-  _clearingOption: 1
-  _timeDelayForAutoClear: 7
-  _specialOption: 1
+  _clearingOption: 3
+  _timeDelayForAutoClear: 5
+  _specialOption: 0

@@ -12,6 +12,9 @@ public class ActorHandler : MonoBehaviour
     public Action<int> ActorRankUpdated;
     public Action<List<CargoLibrary.CargoType>, int> ActorCargoSlotsUpdated;
     public Action<int> ActorCrewUpdated;
+    public Action ActorCargoSold;
+    public Action ActorCargoLoaded;
+    public Action ActorMoveButtonPressed;
 
     //settings
     [SerializeField] DestinationHandler _destinationPrefab = null;
@@ -79,13 +82,16 @@ public class ActorHandler : MonoBehaviour
 
     private void HandleCargoChanged(List<CargoLibrary.CargoType> arg1, int arg2)
     {
+        
         ActorCargoSlotsUpdated?.Invoke(arg1, arg2);
+        
     }
 
     private void OnMove(InputValue value)
     {
         Vector2 move = value.Get<Vector2>();
         int moveDir = ConvertMoveVec2IntoInt(move);
+        if (moveDir >= 0) ActorMoveButtonPressed?.Invoke();
         if (GameController.Instance.Context == UIController.Context.Gameplay)
         {
             _destination.CommandMove(moveDir);
@@ -182,5 +188,15 @@ public class ActorHandler : MonoBehaviour
     public void HandleUpgrade(int upgradesMade)
     {
         ActorRankUpdated?.Invoke(upgradesMade);
+    }
+
+    public void HandleCargoSold()
+    {
+        ActorCargoSold?.Invoke();
+    }
+
+    public void HandleCargoLoaded()
+    {
+        ActorCargoLoaded?.Invoke();
     }
 }

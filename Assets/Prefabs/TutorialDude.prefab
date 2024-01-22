@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 2429058062306010920}
   - component: {fileID: 287478667140152892}
   - component: {fileID: 2442886887654849382}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: TutorialDude
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,7 +162,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}

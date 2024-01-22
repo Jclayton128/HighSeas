@@ -12,15 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbb7f6c121238094a93e98e81fe4d199, type: 3}
   m_Name: Step_0
   m_EditorClassIdentifier: 
-  _tutorialText: This is your ship. It attempts to travel to wherever your destinatino
-    marker is. Move your destination maarker with arrow keys or D-Pad \n \n  Sail
-    to the Sailor to continue
+  _tutorialText: "This is your ship. It attempts to travel to wherever your \ndestination
+    marker is. Move your destination marker \nwith arrow keys or D-Pad.\n\nSail to
+    the Sailor to continue."
   _sprites:
   - {fileID: 21300000, guid: 33155d3a3f8435746bd9b70f13092c28, type: 3}
   - {fileID: 21300000, guid: 30fd96119a50b0542b5cad13a13f0c69, type: 3}
+  - {fileID: 21300000, guid: 840ddc095953a74469d3ec369a5cb2b0, type: 3}
   _hasTutorialDude: 1
-  _tutorialDudeLocation: {x: 0, y: 0, z: 0}
-  _frontsideWaitTime: 0
-  _clearingOption: 0
+  _tutorialDudeLocation: {x: -5, y: 7.7, z: 0}
+  _frontsideWaitTime: 3
+  _clearingOption: 1
   _timeDelayForAutoClear: 4
   _specialOption: 1

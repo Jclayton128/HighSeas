@@ -7,6 +7,7 @@ public class TutorialHandler : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        TutorialController.Instance.AdvanceTutorial();
+        TutorialController.Instance.HandleTutorialDudeContact();
+        Destroy(gameObject);
     }
 }

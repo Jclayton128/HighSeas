@@ -10,19 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cbb7f6c121238094a93e98e81fe4d199, type: 3}
-  m_Name: Step_2
+  m_Name: Step_3
   m_EditorClassIdentifier: 
-  _tutorialText: "For the standard game, you win by collecting 50 Coins before \nany
-    other ship. To do this, you must make profitable deliveries\nbetween the four
-    cities.\n\nPress a move button to continue."
+  _tutorialText: 'There are four cargo types. Each city produces a single
+
+    cargo
+    type over time, and can hold up to 3 units of that cargo.
+
+
+    Press a move
+    button to continue.'
   _sprites:
-  - {fileID: 21300000, guid: bffb3f92cc04bce498296d742f95261b, type: 3}
-  - {fileID: 21300000, guid: 90e156cc484cd224f9834896ae5bf7af, type: 3}
-  - {fileID: 21300000, guid: ab949c9bc1d1d854fa4eb6242cd57373, type: 3}
   - {fileID: 21300000, guid: 9fab8c285e117464e96c82fbc9f89edf, type: 3}
+  - {fileID: 21300000, guid: 724501cb7fda7984f967c43ba16a1c11, type: 3}
+  - {fileID: 21300000, guid: 257dd9a7b0631c74fab9cfa9dc320f43, type: 3}
+  - {fileID: 21300000, guid: 2e723ff6422e39741a3f18c63ae3b46e, type: 3}
   _hasTutorialDude: 0
   _tutorialDudeLocation: {x: 0, y: 0, z: 0}
   _frontsideWaitTime: 0
   _clearingOption: 5
   _timeDelayForAutoClear: 7
-  _specialOption: 0
+  _specialOption: 2

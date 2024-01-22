@@ -155,6 +155,7 @@ public class ShipHandler : MonoBehaviour
         CheckForFreeCargoSpace();
         SetCargoUI();
         RenderShip();
+        _actor.HandleCargoSold();
     }
 
     public void AddOneCargo(CargoLibrary.CargoType cargoAdded)
@@ -166,6 +167,7 @@ public class ShipHandler : MonoBehaviour
         SetCargoUI();
         _crewHandler.GainOneCrew();
         RenderShip();
+        _actor.HandleCargoLoaded();
     }
 
     public bool CheckCanModifyCargoCapacity()

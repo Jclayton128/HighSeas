@@ -161,10 +161,7 @@ public class PierHandler : MonoBehaviour
     private void HandleCompletedOnload(CargoLibrary.CargoType obj)
     {
         _currentShip.AddOneCargo(obj);
-        _attachedCity.CargoOnloadCompleted -= HandleCompletedOnload;
-        Debug.Log($"loaded a " + obj);
-        //TODO hook into player corner UI;
-
+        _attachedCity.CargoOnloadCompleted -= HandleCompletedOnload;        
         CheckAndInitiateShipTransaction();
     }
 }
