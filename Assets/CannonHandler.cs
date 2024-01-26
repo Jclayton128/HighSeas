@@ -79,7 +79,7 @@ public class CannonHandler : MonoBehaviour
     private void Shoot()
     {
         _ps.Emit(1);
-        //JUICE TODO cannonfire sound
+        SoundController.Instance.PlayClip(SoundLibrary.SoundID.CannonFire0);
         var shot = CannonController.Instance.RequisitionCannonball();
 
         Vector3 error = UnityEngine.Random.insideUnitCircle.normalized * _currentTargetError;

@@ -390,7 +390,9 @@ public class CityHandler : MonoBehaviour
 
     private int SatisfyDemandByOneCargo(CargoLibrary.CargoType cargoType)
     {
-        int profit = DetermineProfitFromSale(cargoType);
+        var ot = DetermineProfitFromSale(cargoType);
+        int profit = ot.Item1;
+        SoundController.Instance.PlayClip(SoundLibrary.SoundID.SellCargo4, ot.Item2);
 
         if (profit == 0)
         {
@@ -409,29 +411,40 @@ public class CityHandler : MonoBehaviour
 
     }
 
-    private int DetermineProfitFromSale(CargoLibrary.CargoType cargoType)
+    /// <summary>
+    /// returns profit, profit index
+    /// </summary>
+    /// <param name="cargoType"></param>
+    /// <returns></returns>
+    private (int,int) DetermineProfitFromSale(CargoLibrary.CargoType cargoType)
     {
+        (int, int) ret;
         if (_demands[(int)cargoType] > _cargoPaymentThresholds[2])
         {
-            //highest
-            return BalanceLibrary.Instance.HighDemandProfit;
+            //highes
+            ret.Item1 = BalanceLibrary.Instance.HighDemandProfit;
+            ret.Item2 = 3;
         }
         else if (_demands[(int)cargoType] <= _cargoPaymentThresholds[0])
         {
             //lowest
-            return 0;
+            ret.Item1 = 0;
+            ret.Item2 = 0;
         }
         else if (_demands[(int)cargoType] <= _cargoPaymentThresholds[2] &&
         _demands[(int)cargoType] > _cargoPaymentThresholds[1])
         {
             //second highest
-            return BalanceLibrary.Instance.MidDemandProfit;
+            ret.Item1 = BalanceLibrary.Instance.MidDemandProfit;
+            ret.Item2 = 2;
         }
         else
         {
             //third highest
-            return BalanceLibrary.Instance.LowDemandProfit;
+            ret.Item1 = BalanceLibrary.Instance.LowDemandProfit;
+            ret.Item2 = 1;
         }
+        return ret;
     }
 
 

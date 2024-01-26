@@ -155,6 +155,7 @@ public class ShipHandler : MonoBehaviour
         CheckForFreeCargoSpace();
         SetCargoUI();
         RenderShip();
+        
         _actor.HandleCargoSold();
     }
 

@@ -54,7 +54,11 @@ public class PierHandler : MonoBehaviour
             else
             {
                 _currentShip = ship;
+
                 if (_attachedCity) CheckAndInitiateShipTransaction();
+                {
+                    SoundController.Instance.PlayClip(SoundLibrary.SoundID.EnterPort2);
+                }
                 if (_attachedSmith) CheckAndInitiateShipUpgrade(
                     _attachedSmith.SmithType, _attachedSmith.CurrentUpgradeCost);
             }
@@ -92,6 +96,7 @@ public class PierHandler : MonoBehaviour
         if (_currentShip.CheckIfCanInstallUpgrade(proposedUpgrade) &&
             _currentShip.CheckIfCanAffordUpgrade(proposedCost))
         {
+            SoundController.Instance.PlayClip(SoundLibrary.SoundID.StartUpgrade5);
             _attachedSmith.StartUpgrade();
             _attachedSmith.UpgradeCompleted += HandleUpgradeCompleted;
         }
@@ -135,6 +140,7 @@ public class PierHandler : MonoBehaviour
         _currentShip.Actor.ModifyCoins(-_attachedSmith.CurrentUpgradeCost);
         _currentShip.InstallUpgrade(upgradeCompleted);
         _attachedSmith.UpgradeCompleted -= HandleUpgradeCompleted;
+        SoundController.Instance.PlayClip(SoundLibrary.SoundID.FinishUpgrade6);
     }
 
     public void InitiateCargoOffload(CargoLibrary.CargoType cargoToSell)
@@ -146,6 +152,7 @@ public class PierHandler : MonoBehaviour
     private void HandleCompletedOffload(CargoLibrary.CargoType cargoSold, int profit)
     {
         _currentShip.Actor.ModifyCoins(profit);
+       
         _currentShip.RemoveOneCargo(cargoSold);
         //TODO hook into player corner UI;
         _attachedCity.CargoOffloadCompleted -= HandleCompletedOffload;
@@ -161,6 +168,7 @@ public class PierHandler : MonoBehaviour
     private void HandleCompletedOnload(CargoLibrary.CargoType obj)
     {
         _currentShip.AddOneCargo(obj);
+        SoundController.Instance.PlayClip(SoundLibrary.SoundID.LoadCargo3, (int)obj);
         _attachedCity.CargoOnloadCompleted -= HandleCompletedOnload;        
         CheckAndInitiateShipTransaction();
     }

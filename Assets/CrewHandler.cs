@@ -26,6 +26,7 @@ public class CrewHandler : MonoBehaviour
     public void GainFullCrew()
     {
         _currentCrew = _maxCrew;
+        SoundController.Instance.PlayClip(SoundLibrary.SoundID.CrewRevive8);
         CrewCountChanged?.Invoke(_currentCrew);
     }
 
@@ -38,6 +39,7 @@ public class CrewHandler : MonoBehaviour
             //JUICE TODO: audio of cannonball impact. Or should it live with Cannonball?
 
             _currentCrew--;
+            SoundController.Instance.PlayClip(SoundLibrary.SoundID.CrewScream1);
             CrewCountChanged?.Invoke(_currentCrew);
 
             if (_currentCrew <= 0)
