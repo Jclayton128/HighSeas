@@ -79,10 +79,11 @@ public class UI_WheelHandler : MonoBehaviour
             _currentStep = 0;
         }
         _angleWheel.z += _rotationPerStep;
+        if (_angleWheel.z > 360f) _angleWheel.z -= 360f;
         UIController.Instance.HandleWheelRotationStarted();
         _turnTween.Kill();
         _turnTween = _wheelImage_cells.transform.
-            DOLocalRotate(_angleWheel, _timePerStep, RotateMode.FastBeyond360).
+            DOLocalRotate(_angleWheel, _timePerStep, RotateMode.Fast).
             SetEase(Ease.InOutBack).OnComplete(UIController.Instance.HandleWheelRotationComplete);
     }
 
@@ -94,10 +95,11 @@ public class UI_WheelHandler : MonoBehaviour
             _currentStep = 7;
         }
         _angleWheel.z -= _rotationPerStep;
+        if (_angleWheel.z < 0) _angleWheel.z += 360f;
         UIController.Instance.HandleWheelRotationStarted();
         _turnTween.Kill();
         _turnTween = _wheelImage_cells.transform.
-            DOLocalRotate(_angleWheel, _timePerStep, RotateMode.FastBeyond360)
+            DOLocalRotate(_angleWheel, _timePerStep, RotateMode.Fast)
             .SetEase(Ease.InOutBack).OnComplete(UIController.Instance.HandleWheelRotationComplete);
     }
 }
