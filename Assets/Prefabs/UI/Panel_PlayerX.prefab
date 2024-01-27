@@ -1052,7 +1052,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ab949c9bc1d1d854fa4eb6242cd57373, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a94eccaf28dbf8044b334ba96a282dd3, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1311,12 +1311,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8410218613322170996, guid: 9c0a93d25ec850c4fa92f9bf4ca6a8cb, type: 3}
       propertyPath: m_fontSize
-      value: 29.3
+      value: 25.3
       objectReference: {fileID: 0}
     - target: {fileID: 8410218613322170996, guid: 9c0a93d25ec850c4fa92f9bf4ca6a8cb, type: 3}
       propertyPath: m_fontSizeMin
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 8410218613322170996, guid: 9c0a93d25ec850c4fa92f9bf4ca6a8cb, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -5289874313321263073, guid: 8d3c5b586321fb04ca8ff02dba53622c, type: 2}
     - target: {fileID: 8410218613322170996, guid: 9c0a93d25ec850c4fa92f9bf4ca6a8cb, type: 3}
       propertyPath: m_enableAutoSizing
       value: 1
@@ -1448,12 +1452,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8410218613322170996, guid: 9c0a93d25ec850c4fa92f9bf4ca6a8cb, type: 3}
       propertyPath: m_fontSize
-      value: 28.6
+      value: 24.7
       objectReference: {fileID: 0}
     - target: {fileID: 8410218613322170996, guid: 9c0a93d25ec850c4fa92f9bf4ca6a8cb, type: 3}
       propertyPath: m_fontSizeMin
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 8410218613322170996, guid: 9c0a93d25ec850c4fa92f9bf4ca6a8cb, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -5289874313321263073, guid: 8d3c5b586321fb04ca8ff02dba53622c, type: 2}
     - target: {fileID: 8410218613322170996, guid: 9c0a93d25ec850c4fa92f9bf4ca6a8cb, type: 3}
       propertyPath: m_enableAutoSizing
       value: 1

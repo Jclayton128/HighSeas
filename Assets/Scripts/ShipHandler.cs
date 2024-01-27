@@ -23,7 +23,7 @@ public class ShipHandler : MonoBehaviour
 
     int _maxCargoSlots = 3;
     int _startingCargoSlots = 1;
-    
+    [SerializeField] ParticleSystem _coinPS = null;
 
     //state
     float _timeBetweenMoves = 1f;
@@ -146,6 +146,12 @@ public class ShipHandler : MonoBehaviour
 
 
     #region Cargo
+
+    public void EmitCoins(int numberToEmit)
+    {
+        _coinPS.Emit(numberToEmit);
+    }
+
     public void RemoveOneCargo(CargoLibrary.CargoType cargoRemoved)
     {
         if (_cargoInHold.Contains(cargoRemoved))
@@ -266,7 +272,7 @@ public class ShipHandler : MonoBehaviour
         {
             ShipCollided?.Invoke();
         }
-    }
+    }                                                                                   
 
 
     private void FindCurrentTile()

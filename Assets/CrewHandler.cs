@@ -8,6 +8,8 @@ public class CrewHandler : MonoBehaviour
     public Action<int> CrewCountChanged;
     public Action CrewCountAtZero;
 
+    [SerializeField] ParticleSystem _ps = null;
+
     //state
     [SerializeField] int _currentCrew =5 ;
     [SerializeField] int _maxCrew = 5;
@@ -40,7 +42,8 @@ public class CrewHandler : MonoBehaviour
 
             _currentCrew--;
             SoundController.Instance.PlayClip(SoundLibrary.SoundID.CrewScream1);
-            CrewCountChanged?.Invoke(_currentCrew);
+            _ps.Emit(1);
+            CrewCountChanged?.Invoke(_currentCrew); 
 
             if (_currentCrew <= 0)
             {

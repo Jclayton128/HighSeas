@@ -197,7 +197,7 @@ public class PierHandler : MonoBehaviour
     private void HandleCompletedOffload(CargoLibrary.CargoType cargoSold, int profit)
     {
         _currentShip.Actor.ModifyCoins(profit);
-       
+        _currentShip.EmitCoins(profit);
         _currentShip.RemoveOneCargo(cargoSold);
         //TODO hook into player corner UI;
         _attachedCity.CargoOffloadCompleted -= HandleCompletedOffload;
