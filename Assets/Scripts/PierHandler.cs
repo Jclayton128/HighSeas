@@ -13,6 +13,8 @@ public class PierHandler : MonoBehaviour
 
     //state
     [SerializeField] ShipHandler _currentShip;
+    public TileHandler Tile => _tileHandler;
+    [SerializeField] List<ShipHandler> _shipWaitingList = new List<ShipHandler>();
     
     private void Start()
     {
@@ -32,35 +34,53 @@ public class PierHandler : MonoBehaviour
             if (tile.City)
             {
                 _attachedCity = tile.City;
+                _attachedCity.CargoProduced += HandleCargoProduced;
+                _attachedCity.SetPier(this);
                 break;
             }
             if (tile.Smith)
             {
                 _attachedSmith = tile.Smith;
+                _attachedSmith.SetPier(this);
             }
         }
     }
 
+    private void HandleCargoProduced()
+    {
+        if (_attachedCity && _currentShip)
+        {
+            CheckAndInitiateShipTransaction();
+            //SoundController.Instance.PlayClip(SoundLibrary.SoundID.EnterPort2);
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         ShipHandler ship;
         if (collision.TryGetComponent<ShipHandler>(out ship))
         {
+            if (_attachedCity)
+            {
+                SoundController.Instance.PlayClip(SoundLibrary.SoundID.EnterPort2);
+            }
+
             if (_currentShip != null)
             {
-                
+                _shipWaitingList.Add(ship);
             }
             else
             {
                 _currentShip = ship;
-
-                if (_attachedCity) CheckAndInitiateShipTransaction();
+                if (_attachedCity) 
                 {
-                    SoundController.Instance.PlayClip(SoundLibrary.SoundID.EnterPort2);
+                    CheckAndInitiateShipTransaction();
                 }
-                if (_attachedSmith) CheckAndInitiateShipUpgrade(
-                    _attachedSmith.SmithType, _attachedSmith.CurrentUpgradeCost);
+                if (_attachedSmith)
+                {
+                    CheckAndInitiateShipUpgrade(
+                        _attachedSmith.SmithType, _attachedSmith.CurrentUpgradeCost);
+                }
             }
         }
     }
@@ -68,6 +88,7 @@ public class PierHandler : MonoBehaviour
 
     private void CheckAndInitiateShipTransaction()
     {
+        Debug.Log("attempting transacion");
         //Initiate Cargo Sale of... most demanded cargo? cargo in first index?
         var options = _currentShip.CargoInHold;
 
@@ -129,7 +150,31 @@ public class PierHandler : MonoBehaviour
                     _attachedSmith.UpgradeCompleted -= HandleUpgradeCompleted;
                 }
 
-                _currentShip = null;
+                if (_shipWaitingList.Count > 0)
+                {
+                    _currentShip = _shipWaitingList[0];
+                    _shipWaitingList.Remove(_currentShip);
+
+                    if (_attachedCity)
+                    {
+                        CheckAndInitiateShipTransaction();
+                    }
+                    if (_attachedSmith)
+                    {
+                        CheckAndInitiateShipUpgrade(
+                            _attachedSmith.SmithType, _attachedSmith.CurrentUpgradeCost);
+                    }
+
+                }
+                else
+                {
+                    _currentShip = null;
+                }
+
+            }
+            else
+            {
+                _shipWaitingList.Remove(ship);
             }
         }
     }

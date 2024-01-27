@@ -97,6 +97,12 @@ public class DestinationHandler : MonoBehaviour
         DestinationChanged?.Invoke(proposedDestination);
     }
 
+    public void JumpToTile(TileHandler destinationTile)
+    {
+        transform.position = destinationTile.transform.position;
+        DestinationChanged?.Invoke(destinationTile);
+    }
+
 
 
 }

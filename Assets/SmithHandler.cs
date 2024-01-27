@@ -24,6 +24,7 @@ public class SmithHandler : MonoBehaviour
     int _currentUpgradeCost = 0;
     public int CurrentUpgradeCost => _currentUpgradeCost;
     bool _isUpgrading = false;
+    public PierHandler Pier { get; private set; }
 
 
 
@@ -54,6 +55,10 @@ public class SmithHandler : MonoBehaviour
         _isActive = false;
     }
 
+    public void SetPier(PierHandler pier)
+    {
+        Pier = pier;
+    }
     private void SetSmithType()
     {
         _smithType = SmithController.Instance.GetNextSmithType();

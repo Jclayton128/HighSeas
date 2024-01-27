@@ -9,6 +9,7 @@ public class CityHandler : MonoBehaviour
 {
     public Action<CargoLibrary.CargoType> CargoOnloadCompleted;
     public Action<CargoLibrary.CargoType, int> CargoOffloadCompleted;
+    public Action CargoProduced;
 
     [SerializeField] Canvas _canvas = null;
     [SerializeField] SpriteRenderer _sr = null;
@@ -35,9 +36,10 @@ public class CityHandler : MonoBehaviour
     [SerializeField] CargoLibrary.CargoType _cargoType = CargoLibrary.CargoType.Cargo0;
     public CargoLibrary.CargoType CargoType => _cargoType;
     [SerializeField] float[] _demands = new float[4];
-    [SerializeField] float _currentProductionFactor;
+    float _currentProductionFactor;
     [SerializeField] int _productionInStock = 0;
     public int ProductionInStock => _productionInStock;
+    public float ProductionScore => _productionInStock + _currentProductionFactor;
 
     Tween[] _demandTweens = new Tween[4];
     bool[] _isBuzzing = new bool[4] { false,false,false, false };
@@ -50,6 +52,8 @@ public class CityHandler : MonoBehaviour
     [SerializeField] float _offloadFactor = 0;
     [SerializeField] CargoLibrary.CargoType _cargoBeingOffloaded;
     bool _hasBeenDemod = false;
+    public TileHandler Tile { get; private set; }
+    public PierHandler Pier { get; private set; }
 
 
     #region Startup
@@ -59,9 +63,11 @@ public class CityHandler : MonoBehaviour
         CityController.Instance.RegisterCity(this);
         _cargoType = CityController.Instance.GetNextCargoType();
         _sr.sprite = TileLibrary.Instance.GetRandomCitySprite();
+        _currentProductionFactor = UnityEngine.Random.Range(0.5f, 0.9f);
         AssignDemandSprites();
         AssignProductionSprites();
         RandomlyAssignDemandRates();
+        RandomlyAssignInitialDemandLevels();
 
         UpdateProductionImages();
         UpdateDemandIcons();
@@ -69,6 +75,7 @@ public class CityHandler : MonoBehaviour
 
         GameController.Instance.GameModeStarted += HandleGameStarted;
         GameController.Instance.GameModeEnded += HandleGameEnded;
+        Tile = GetComponentInParent<TileHandler>();
     }
 
     private void OnDestroy()
@@ -87,6 +94,11 @@ public class CityHandler : MonoBehaviour
     {
         _canvas.enabled = false;
         _isActive = false;
+    }
+
+    public void SetPier(PierHandler pier)
+    {
+        Pier = pier;
     }
 
     private void AssignProductionSprites()
@@ -162,6 +174,15 @@ public class CityHandler : MonoBehaviour
         for (int i = 0; i<_demandFillRings.Length; i++)
         {
             _demandFillRings[i].fillAmount = 0;
+        }
+    }
+
+    private void RandomlyAssignInitialDemandLevels()
+    {
+        for (int i = 0; i < _demands.Length; i++)
+        {
+            if ((int)_cargoType == i) continue;
+            _demands[i] = UnityEngine.Random.Range(0.3f, 0.5f);
         }
     }
 
@@ -246,6 +267,7 @@ public class CityHandler : MonoBehaviour
         if (_currentProductionFactor >= 1)
         {
             _productionInStock++;
+            CargoProduced?.Invoke();
             _currentProductionFactor = 0;
 
             UpdateProductionImages();
@@ -388,6 +410,20 @@ public class CityHandler : MonoBehaviour
         else return false;
     }
 
+    public bool CheckIfCityWantsAnyCargo(List<CargoLibrary.CargoType> cargos)
+    {
+        bool doesDemandACargo = false;
+        for (int i = 0; i < cargos.Count; i++)
+        {
+            if (CheckIfCityWantsCargo(cargos[i]))
+            {
+                doesDemandACargo = true;
+                break;
+            }
+        }
+        return doesDemandACargo;
+    }
+
     private int SatisfyDemandByOneCargo(CargoLibrary.CargoType cargoType)
     {
         var ot = DetermineProfitFromSale(cargoType);
@@ -445,6 +481,45 @@ public class CityHandler : MonoBehaviour
             ret.Item2 = 1;
         }
         return ret;
+    }
+
+    public float GetHighestDemandScoreFromAvailableCargos(List<CargoLibrary.CargoType> cargos)
+    {
+        //    Debug.Log($"testing {cargos}");
+        //    int indexOfBestCargo = -1;
+        //    float demandToBeat = 0;
+
+        //    for (int i =0; i < cargos.Count; i++)
+        //    {
+        //        int cargoTypeToTest = (int)cargos[i];
+        //        Debug.Log($"{cargoTypeToTest}: {_demands[cargoTypeToTest]} vs:" +
+        //$"{(int)cargos[i]}");
+        //        if (_demands[cargoTypeToTest] > demandToBeat)
+        //        {
+
+        //            indexOfBestCargo = cargoTypeToTest;
+        //            demandToBeat = _demands[cargoTypeToTest];
+        //        }
+        //    }
+        //    Debug.Log("so highest demand for cargos held is: " + _demands[indexOfBestCargo]);
+
+        float highestDemand = 0;
+        for (int i = 0; i < _demands.Length; i++)
+        {
+            if (!cargos.Contains((CargoLibrary.CargoType)i))
+            {
+                continue;
+            }
+            if (_demands[i] > highestDemand)
+            {
+                highestDemand = _demands[i];
+            }
+        }
+
+
+        return highestDemand;
+
+
     }
 
 

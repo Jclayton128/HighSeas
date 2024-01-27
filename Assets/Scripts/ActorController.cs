@@ -11,7 +11,9 @@ public class ActorController : MonoBehaviour
     [SerializeField] TileHandler[] _startingTiles = null;
     [SerializeField] ActorUIHandler[] _uiHandlers = null;
     [SerializeField] DInghyHandler _dingyPrefab = null;
-    
+    [SerializeField] ActorHandler _aiPrefab = null;
+    [SerializeField] int _maxPlayers = 2;
+
     //state
     [SerializeField] List<ActorHandler> _activeActors = new List<ActorHandler>();
     List<DInghyHandler> _activeDinghys = new List<DInghyHandler>();
@@ -20,11 +22,25 @@ public class ActorController : MonoBehaviour
 
     public void RegisterNewPlayerAsActor(PlayerInput newPlayer)
     {
-        ActorHandler ah = newPlayer.GetComponent<ActorHandler>();
+        ActorHandler ah;
+        if (newPlayer)
+        {
+           ah = newPlayer.GetComponent<ActorHandler>();
+        }
+        else
+        {
+            ah = Instantiate(_aiPrefab);
+        }
+
         _activeActors.Add(ah);
         int playerIndex = _activeActors.IndexOf(ah);
         //Debug.Log($"Added Player {playerIndex}");
-        ah.SetupNewActor(playerIndex, _uiHandlers[playerIndex]);
+        bool isPlayer;
+
+        if (newPlayer) isPlayer = true;
+        else isPlayer = false;
+
+        ah.SetupNewActor(playerIndex, _uiHandlers[playerIndex], isPlayer);
     }
 
     private void Awake()
@@ -40,6 +56,12 @@ public class ActorController : MonoBehaviour
 
     private void HandleGameplayStarted()
     {
+        while (_activeActors.Count <_maxPlayers)
+        {
+            Debug.Log("player added");
+            RegisterNewPlayerAsActor(null);
+        }
+
         for (int i = 0; i< _activeActors.Count; i++)
         {
             _activeActors[i].SetupShip(i, _startingTiles[i]);

@@ -18,7 +18,8 @@ public class PlayerLibrary : MonoBehaviour
     [SerializeField] Sprite[] _redSails = null;
     [SerializeField] Sprite[] _yellowSails = null;
     [SerializeField] Sprite[] _baseShipsByCannon = null;
-    
+
+    [SerializeField] AI_Simple _ai = null;
 
     //state
     List<string> _shipNamesAvailable;
@@ -78,7 +79,7 @@ public class PlayerLibrary : MonoBehaviour
             case 2:
                 return _redSails[sailLevel];
             case 3:
-                return _yellowSails[sailLevel - 1];
+                return _yellowSails[sailLevel];
 
             default: return null;
 
@@ -89,4 +90,10 @@ public class PlayerLibrary : MonoBehaviour
     {
         return _baseShipsByCannon[cannonLevel];
     }
+
+    public AI_Simple GetAI()
+    {
+        return _ai;
+    }
 }
+

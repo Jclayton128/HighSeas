@@ -7,6 +7,7 @@ using System;
 public class ShipHandler : MonoBehaviour
 {
     public Action<List<CargoLibrary.CargoType>, int> CargoChanged;
+    public Action ShipCollided;
 
     [SerializeField] SpriteRenderer _baseShipSR = null;
     [SerializeField] SpriteRenderer[] _sailSRs = null;
@@ -259,6 +260,13 @@ public class ShipHandler : MonoBehaviour
 
     #endregion
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == 8)
+        {
+            ShipCollided?.Invoke();
+        }
+    }
 
 
     private void FindCurrentTile()

@@ -23,6 +23,7 @@ public class ActorHandler : MonoBehaviour
 
     //Refs
     [SerializeField] DestinationHandler _destination;
+    public DestinationHandler Destination => _destination;
     [SerializeField] ShipHandler _ship;
     public ShipHandler Ship => _ship;
     [SerializeField] ActorUIHandler _ui;
@@ -33,12 +34,15 @@ public class ActorHandler : MonoBehaviour
     int _totalCoins = 0;
     int _currentCoins = 0;
     CrewHandler _crewHandler;
+    [SerializeField] bool _isPlayer;
+    AI_Simple _ai;
 
-    public void SetupNewActor(int playerIndex, ActorUIHandler ui)
+    public void SetupNewActor(int playerIndex, ActorUIHandler ui, bool isPlayer)
     {
         _actorIndex = playerIndex;        
         _ui = ui;
         _ui.AssignActor(this, playerIndex);
+        _isPlayer = isPlayer;
     }
 
     public void SetupShip(int playerIndex, TileHandler startingTile)
@@ -56,7 +60,15 @@ public class ActorHandler : MonoBehaviour
         _crewHandler = _ship.GetComponent<CrewHandler>();
         _crewHandler.CrewCountChanged += HandleCrewChanged;
         _crewHandler.CrewCountAtZero += HandleCrewAtZero;
+
+        if (!_isPlayer)
+        {
+            Debug.Log("tock");
+            _ai = GetComponent<AI_Simple>();
+            _ai.AttachAIToShip();
+        }
     }
+
 
     public void NullifyActorAtGameEnd()
     {
