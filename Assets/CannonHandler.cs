@@ -88,7 +88,7 @@ public class CannonHandler : MonoBehaviour
 
 
         shot.SetupCannonballInstance(transform.position,
-            _target.transform.position + error + lead);
+            _target.transform.position + error + lead, this);
 
         Debug.DrawLine(
             transform.position,

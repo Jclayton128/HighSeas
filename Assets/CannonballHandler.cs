@@ -28,6 +28,8 @@ public class CannonballHandler : MonoBehaviour
     bool _isActive = false;
     Vector3 _scale = Vector3.one;
     Vector3 _yAdjust = Vector3.zero;
+    CannonHandler _owningShip;
+    public CrewHandler OwningCrew => _owningShip.GetComponentInParent<CrewHandler>();
 
 
     public void InitializeCannonball()
@@ -36,7 +38,8 @@ public class CannonballHandler : MonoBehaviour
         _ps = GetComponent<ParticleSystem>();
     }
 
-    public void SetupCannonballInstance(Vector3 spawnPosition, Vector3 targetPosition)
+    public void SetupCannonballInstance(Vector3 spawnPosition, Vector3 targetPosition,
+        CannonHandler owningCannon)
     {
         _srCannonball.enabled = true;
         _srShadow.enabled = true;
@@ -52,6 +55,7 @@ public class CannonballHandler : MonoBehaviour
         _lifetimeFactor = _remainingLifetime / _totalLifetime;
         _deltaFactorFromMidpoint = (1-_lifetimeFactor) * 2;
         _isActive = true;
+        _owningShip = owningCannon;
         Update();
     }
 
@@ -74,7 +78,7 @@ public class CannonballHandler : MonoBehaviour
 
         if (_remainingLifetime <= 0)
         {
-            TerminateCannonball();
+            TerminateCannonball(false);
         }
 
     }
@@ -114,15 +118,23 @@ public class CannonballHandler : MonoBehaviour
     //    TerminateCannonball();
     //}
 
-    public void TerminateCannonball()
+    public void TerminateCannonball(bool didHitAShip)
     {
         _isActive = false;
         _srCannonball.enabled = false;
         _srShadow.enabled = false;
         _coll.enabled = false;
-        _ps.Emit(30); //JUICE TODO check for tile tile and emit particle splash of water, grass, or wood;
-        //JUICE TODO splash sound
 
+        if (didHitAShip)
+        {
+            _ps.Emit(5);
+        }
+        else
+        {
+            //JUICE TODO check for tile tile and emit particle splash of water, grass, or wood;
+            //JUICE TODO splash sound
+            _ps.Emit(30);
+        }
         Invoke(nameof(Delay_TerminateCannonball), 4f);
     }
 

@@ -243,7 +243,7 @@ public class CityHandler : MonoBehaviour
         _loadFactor += Time.deltaTime * BalanceLibrary.Instance.OnloadRate;
 
         _productionFillRings[_productionInStock - 1].fillAmount = 1-_loadFactor;
-        _productionFillRings[_productionInStock - 1].color = Color.grey;
+        _productionFillRings[_productionInStock - 1].color = Color.red;
 
         if (_loadFactor>= 1)
         {
@@ -533,6 +533,7 @@ public class CityHandler : MonoBehaviour
     {
         _isLoadingProduct = false;
         _loadFactor = 0;
+        UpdateLoading();
     }
 
     public void StartOffLoad(CargoLibrary.CargoType cargoType)
@@ -546,6 +547,7 @@ public class CityHandler : MonoBehaviour
     {
         _isOffloadingProduct = false;
         _offloadFactor = 0;
+        UpdateOffLoading();
     }
 
     #endregion

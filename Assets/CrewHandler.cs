@@ -37,9 +37,7 @@ public class CrewHandler : MonoBehaviour
         CannonballHandler ch;
         if (collision.TryGetComponent<CannonballHandler>(out ch))
         {
-            //JUICE TODO: emit crew-images as particle and wood bits.
-            //JUICE TODO: audio of cannonball impact. Or should it live with Cannonball?
-
+            if (ch.OwningCrew == this) return;
             _currentCrew--;
             SoundController.Instance.PlayClip(SoundLibrary.SoundID.CrewScream1);
             _ps.Emit(1);
@@ -50,7 +48,7 @@ public class CrewHandler : MonoBehaviour
                 CrewCountAtZero?.Invoke();
             }
 
-            ch.TerminateCannonball();
+            ch.TerminateCannonball(true);
         }
     }
 }

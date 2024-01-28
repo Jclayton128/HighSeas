@@ -84,7 +84,6 @@ public class ActorHandler : MonoBehaviour
     private void HandleCrewAtZero()
     {
         ActorController.Instance.DispatchDinghy(_actorIndex);
-        Debug.Log("Crew at zero!");
     }
 
     private void OnDestroy()

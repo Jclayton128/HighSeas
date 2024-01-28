@@ -73,6 +73,7 @@ public class ShipHandler : MonoBehaviour
         _hasCrew = false;
         _ai.maxSpeed = 0;
         gameObject.tag = "Dinghy";
+        gameObject.layer = 10;
     }
 
     private void HandleCrewReturned(int count)
@@ -81,6 +82,7 @@ public class ShipHandler : MonoBehaviour
         _hasCrew = true;
         _ai.maxSpeed = BalanceLibrary.Instance.GetSpeedByCount(_currentSailingLevel);
         gameObject.tag = "Targetable";
+        gameObject.layer = 8;
     }
 
     private void Start()
