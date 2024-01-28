@@ -58,7 +58,7 @@ public class ActorController : MonoBehaviour
     {
         while (_activeActors.Count <_maxPlayers)
         {
-            Debug.Log("player added");
+            //Debug.Log("player added");
             RegisterNewPlayerAsActor(null);
         }
 

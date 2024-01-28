@@ -28,7 +28,7 @@ public class GameController : MonoBehaviour
     //state
     [SerializeField] UIController.Context _currentContext = UIController.Context.Pretitle;
     public UIController.Context Context => _currentContext;
-    [SerializeField] WheelOptions _currentWheelOption;
+    [SerializeField] WheelOptions _currentWheelOption = WheelOptions.EnterTutorialGame1;
     public WheelOptions WheelOption => _currentWheelOption;
 
     private void Awake()
@@ -74,7 +74,7 @@ public class GameController : MonoBehaviour
 
     public void RequestReloadAfterGameover(int requestingActor)
     {
-        Debug.Log($"{requestingActor} wants to reload. winner was {_winningActorIndex}");
+        //Debug.Log($"{requestingActor} wants to reload. winner was {_winningActorIndex}");
         if (requestingActor != _winningActorIndex)
         {
             Debug.Log("Leaving game over screen can only be done by winning player");

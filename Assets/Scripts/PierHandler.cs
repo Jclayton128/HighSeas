@@ -88,7 +88,7 @@ public class PierHandler : MonoBehaviour
 
     private void CheckAndInitiateShipTransaction()
     {
-        Debug.Log("attempting transacion");
+        //Debug.Log("attempting transacion");
         //Initiate Cargo Sale of... most demanded cargo? cargo in first index?
         var options = _currentShip.CargoInHold;
 

@@ -63,7 +63,7 @@ public class ActorHandler : MonoBehaviour
 
         if (!_isPlayer)
         {
-            Debug.Log("tock");
+            //Debug.Log("tock");
             _ai = GetComponent<AI_Simple>();
             _ai.AttachAIToShip();
         }
