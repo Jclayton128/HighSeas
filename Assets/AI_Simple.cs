@@ -9,24 +9,21 @@ public class AI_Simple : MonoBehaviour
     [SerializeField] ShipHandler _ship;
     [SerializeField] DestinationHandler _dh;
     float _timeBetweenBreadcrumbs = 1f;
-
+    [SerializeField] float _staticTimeThreshold = 6f;
 
     //state
     CityHandler _cityOfInterest;
-    [SerializeField] bool _isTryingToMove = false;
-    float _timeToDropBreadcrump_0;
-    float _timeToDropBreadcrump_1;
     TileHandler _destinationTile;
     [SerializeField] TileHandler _currentTile;
-    [SerializeField] TileHandler _prevTile_0;
-    TileHandler _prevTile_1;
+
     [SerializeField] bool _isBackingUp = false;
     bool _isBackingUpAgain = false;
+    float _timeForStaticThresholdTest;
 
     private void Start()
     {
         GameController.Instance.GameModeStarted += HandleGameStart;
-
+        _timeForStaticThresholdTest = float.MaxValue;
     }
     internal void AttachAIToShip()
     {
@@ -35,11 +32,8 @@ public class AI_Simple : MonoBehaviour
         _ah.ActorCargoLoaded += HandleCargoLoaded;
         _dh = _ah.Destination;
         _ship = _ah.Ship;
-        _ship.ShipCollided += HandleShipCollided;
         HandleGameStart();
 
-        _timeToDropBreadcrump_0 = 0;
-        _timeToDropBreadcrump_1 = _timeBetweenBreadcrumbs / 2f;
     }
 
     private void OnDestroy()
@@ -47,62 +41,21 @@ public class AI_Simple : MonoBehaviour
         GameController.Instance.GameModeStarted -= HandleGameStart;
     }
 
-    //private void Update()
-    //{
-    //    if (_isBackingUp)
-    //    {
-    //        if (FindCurrentTileOfShip() == _prevTile_0)
-    //        {
-    //            _isBackingUp = false;
-    //            _dh.JumpToTile(_destinationTile);
-    //        }
-    //    }
-    //    else
-    //    {
-    //        if (Time.time > _timeToDropBreadcrump_0)
-    //        {
-    //            DropBreadCrumb_0();
-    //            _timeToDropBreadcrump_0 = Time.time + _timeBetweenBreadcrumbs;
-    //        }
-
-    //        //if (Time.time > _timeToDropBreadcrump_1)
-    //        //{
-    //        //    DropBreadCrumb_1();
-    //        //    _timeToDropBreadcrump_0 = Time.time + _timeBetweenBreadcrumbs;
-    //        //}
-    //    }
-
-
-    //}
-
-    private void DropBreadCrumb_0()
-    {
-        _prevTile_0 = FindCurrentTileOfShip();
-    }
-
-    private void DropBreadCrumb_1()
-    {
-        _prevTile_1 = FindCurrentTileOfShip();
-    }
-
+  
     private void HandleGameStart()
     {
         FindSetBestLoadCity();
     }
 
-    private TileHandler FindCurrentTileOfShip()
+
+    private void Update()
     {
-        Vector3 testPos = _ship.transform.position;
-        testPos.y -= 0;
-
-        var hit_0 = Physics2D.OverlapCircle(testPos, 0.01f, Layers.LayerMask_AllTiles);
-        if (hit_0)
+        if (Time.time > _timeForStaticThresholdTest)
         {
-            _currentTile = hit_0.GetComponent<TileHandler>();
-            return _currentTile;
+            _timeForStaticThresholdTest = Time.time + _staticTimeThreshold;
+            StaticRethink();
+            
         }
-        else return null;
-
     }
 
     private void HandleCargoSold()
@@ -110,11 +63,11 @@ public class AI_Simple : MonoBehaviour
         if (_cityOfInterest.CheckIfCityWantsAnyCargo(_ship.CargoInHold))
         {
             //do nothing while remaining cargo unloads
-            _isTryingToMove = false;
+            _timeForStaticThresholdTest = Time.time + _staticTimeThreshold;
         }
         else
         {
-
+            _timeForStaticThresholdTest = float.MaxValue;
             FindSetBestLoadCity();
         }
 
@@ -125,11 +78,12 @@ public class AI_Simple : MonoBehaviour
         if (_cityOfInterest.ProductionInStock > 0 && _ship.HasFreeCargoSpace)
         {
             //do nothing and wait for load to complete
-            _isTryingToMove = false;
+            _timeForStaticThresholdTest = Time.time + _staticTimeThreshold;
         }
         else
         {
             //find a place to sell
+            _timeForStaticThresholdTest = float.MaxValue;
             FindSetBestSellCity();
         }
     }
@@ -139,7 +93,6 @@ public class AI_Simple : MonoBehaviour
         _cityOfInterest = CityController.Instance.FindBestCityToLoadFrom(_ship.transform.position);
         _destinationTile = _cityOfInterest.Pier.Tile;
         _dh.JumpToTile(_destinationTile);
-        _isTryingToMove = true;
     }
 
     private void FindSetBestSellCity()
@@ -148,19 +101,18 @@ public class AI_Simple : MonoBehaviour
             _ship.CargoInHold);
         _destinationTile = _cityOfInterest.Pier.Tile;
         _dh.JumpToTile(_destinationTile);
-        _isTryingToMove = true;
     }
 
-    private void HandleShipCollided()
+    private void StaticRethink()
     {
-        if (FindCurrentTileOfShip() == _destinationTile)
+        Debug.Log("Static Rethink!");
+        if (_ship.CargoInHold.Count > 0)
         {
-            //do nothing, already at desired destination
+            FindSetBestSellCity();
         }
         else
         {
-            _dh.JumpToTile(_prevTile_0);
-            _isBackingUp = true;
+            FindSetBestLoadCity();
         }
     }
 }

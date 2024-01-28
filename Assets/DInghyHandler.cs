@@ -35,8 +35,9 @@ public class DInghyHandler : MonoBehaviour
             if (collShip == _targetShip)
             {
                 _targetShip.GetComponent<CrewHandler>().GainFullCrew();
+                Destroy(gameObject);
             }
-            Destroy(gameObject);
+
         }
     }
 

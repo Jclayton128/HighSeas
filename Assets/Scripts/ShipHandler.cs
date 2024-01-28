@@ -173,7 +173,7 @@ public class ShipHandler : MonoBehaviour
         _cargoInHold.Add(cargoAdded);
         CheckForFreeCargoSpace();
         SetCargoUI();
-        _crewHandler.GainOneCrew();
+        //_crewHandler.GainOneCrew();
         RenderShip();
         _actor.HandleCargoLoaded();
     }

@@ -32,7 +32,7 @@ public class SoundController : MonoBehaviour
     {
         _soundAuso.PlayOneShot(_windIntro);
         GameController.Instance.GameModeStarted += HandleGameModeStarted;
-        Invoke(nameof(Delay_Start), 5f);
+        Invoke(nameof(Delay_Start), 3f);
     }
 
     private void Delay_Start()
