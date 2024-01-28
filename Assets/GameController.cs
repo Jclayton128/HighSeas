@@ -132,6 +132,7 @@ public class GameController : MonoBehaviour
             _currentWheelOption = (WheelOptions)UIController.Instance.DecreaseWheelAndGetCurrentStep();
         }
         PushWheelTextToUI();
+        SoundController.Instance.PlayClip(SoundLibrary.SoundID.WheelCreak7);
     }
 
     private void PushWheelTextToUI()
