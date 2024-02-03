@@ -38,5 +38,13 @@ public class DebugController : MonoBehaviour
         {
             SmithController.Instance.Debug_DevelopSmiths();
         }
+        if (_isInDebugMode && Input.GetKeyDown(KeyCode.Y))
+        {
+            ActorController.Instance.Debug_DevelopDevShip();
+        }
+        if (_isInDebugMode && Input.GetKeyDown(KeyCode.P))
+        {
+            ActorController.Instance.SpawnPirate();
+        }
     }
 }

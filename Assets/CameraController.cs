@@ -28,6 +28,7 @@ public class CameraController : MonoBehaviour
 
     public void SetZoom(ZoomLevel zoomLevel, Transform targetTransform)
     {
+        Debug.Log("setting zoom: " + zoomLevel);
         _zoomTween.Kill();
         _posTween.Kill();
         _zoomTween = Camera.main.DOOrthoSize(_zoomLevels[(int)zoomLevel], _zoomDuration)

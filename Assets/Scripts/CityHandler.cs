@@ -242,8 +242,20 @@ public class CityHandler : MonoBehaviour
     {
         _loadFactor += Time.deltaTime * BalanceLibrary.Instance.OnloadRate;
 
-        _productionFillRings[_productionInStock - 1].fillAmount = 1-_loadFactor;
+        _productionFillRings[_productionInStock - 1].fillAmount = 1 - _loadFactor;
         _productionFillRings[_productionInStock - 1].color = Color.red;
+
+        //if (_productionInStock > 0)
+        //{
+        //    _productionFillRings[_productionInStock - 1].fillAmount = 1 - _loadFactor;
+        //    _productionFillRings[_productionInStock - 1].color = Color.red;
+        //}
+        //else
+        //{
+        //    _productionFillRings[0].fillAmount = 1 - _loadFactor;
+        //    _productionFillRings[0].color = Color.red;
+        //}
+
 
         if (_loadFactor>= 1)
         {
@@ -533,7 +545,7 @@ public class CityHandler : MonoBehaviour
     {
         _isLoadingProduct = false;
         _loadFactor = 0;
-        UpdateLoading();
+        //UpdateLoading();
     }
 
     public void StartOffLoad(CargoLibrary.CargoType cargoType)

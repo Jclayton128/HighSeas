@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2578281121795682888}
   - component: {fileID: 7549377483636859961}
-  - component: {fileID: 9191071898674543216}
+  - component: {fileID: 5975068191187214410}
   m_Layer: 0
-  m_Name: AIAvatar
+  m_Name: PirateAvatar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,8 +50,7 @@ MonoBehaviour:
   _destination: {fileID: 0}
   _ship: {fileID: 0}
   _ui: {fileID: 0}
-  _isPlayer: 0
---- !u!114 &9191071898674543216
+--- !u!114 &5975068191187214410
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -60,13 +59,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4561746123468105329}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a55a4eb55b871343b80a2c850b06957, type: 3}
+  m_Script: {fileID: 11500000, guid: bc2105168fa58164182fe68ba7ba3040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ah: {fileID: 0}
-  _ship: {fileID: 0}
-  _dh: {fileID: 0}
-  _staticTimeThreshold: 10
-  _currentTile: {fileID: 0}
-  _isBackingUp: 0
-  _timeForStaticThresholdTest: 0
+  _timeBetweenUpdates: 3

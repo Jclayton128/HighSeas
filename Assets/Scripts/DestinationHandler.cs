@@ -69,6 +69,17 @@ public class DestinationHandler : MonoBehaviour
                 _cornerSRs[3].sortingOrder = 4;
                 break;
 
+
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                _cornerSRs[0].sortingOrder = 5;
+                _cornerSRs[1].sortingOrder = 5;
+                _cornerSRs[2].sortingOrder = 5;
+                _cornerSRs[3].sortingOrder = 5;
+                break;
+
         }
     }
 
@@ -103,6 +114,11 @@ public class DestinationHandler : MonoBehaviour
         DestinationChanged?.Invoke(destinationTile);
     }
 
-
-
+    internal void Destroy()
+    {
+        foreach (var sr in _cornerSRs)
+        {
+            sr.enabled = false;
+        }
+    }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,10 +13,16 @@ public class ActorController : MonoBehaviour
     [SerializeField] ActorUIHandler[] _uiHandlers = null;
     [SerializeField] DInghyHandler _dingyPrefab = null;
     [SerializeField] ActorHandler _aiPrefab = null;
-    [SerializeField] int _maxPlayers = 2;
+    [SerializeField] ActorHandler _piratePrefab = null;
+
+
+    [SerializeField] int _maxPlayers = 4;
+    public int MaxPlayers => _maxPlayers;
 
     //state
-    [SerializeField] List<ActorHandler> _activeActors = new List<ActorHandler>();
+    List<ActorHandler> _activeActors = new List<ActorHandler>();
+    List<ActorHandler> _activePirates = new List<ActorHandler>();
+
     List<DInghyHandler> _activeDinghys = new List<DInghyHandler>();
 
 
@@ -42,6 +49,7 @@ public class ActorController : MonoBehaviour
 
         ah.SetupNewActor(playerIndex, _uiHandlers[playerIndex], isPlayer);
     }
+
 
     private void Awake()
     {
@@ -92,6 +100,16 @@ public class ActorController : MonoBehaviour
         }
     }
 
+    internal void Debug_DevelopDevShip()
+    {
+        _activeActors[0].Ship.InstallUpgrade(SmithLibrary.SmithType.Sails);
+        _activeActors[0].Ship.InstallUpgrade(SmithLibrary.SmithType.Sails);
+        _activeActors[0].Ship.InstallUpgrade(SmithLibrary.SmithType.Cannon);
+        _activeActors[0].Ship.InstallUpgrade(SmithLibrary.SmithType.Cannon);
+        _activeActors[0].Ship.InstallUpgrade(SmithLibrary.SmithType.Cargo);
+        _activeActors[0].Ship.InstallUpgrade(SmithLibrary.SmithType.Cargo);
+    }
+
     public void DispatchDinghy(int actorIndex)
     {
         DInghyHandler newDinghy = Instantiate(
@@ -114,6 +132,31 @@ public class ActorController : MonoBehaviour
     public ActorHandler GetFirstPlayer()
     {
         return _activeActors[0];
+    }
+
+    public void SpawnPirate()
+    {
+
+        ActorHandler ah = Instantiate(_piratePrefab);
+        _activePirates.Add(ah);
+        int pirateIndex = _activePirates.Count - 1;
+        ah.SetupNewPirate(pirateIndex, _startingTiles[pirateIndex + _maxPlayers]);
+        SoundController.Instance.PlayClip(SoundLibrary.SoundID.PirateArrival10);
+    }
+
+    public TileHandler FindWealthiestActor()
+    {
+        ActorHandler ah = null;
+        int coinToBeat = 0;
+        foreach (var actor in _activeActors)
+        {
+            if (actor.Coins >= coinToBeat)
+            {
+                ah = actor;
+                coinToBeat = ah.Coins;
+            }
+        }
+        return ah.Ship.Tile;
     }
 }
 

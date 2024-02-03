@@ -18,6 +18,11 @@ public class CrewHandler : MonoBehaviour
         
     }
 
+    public void SetAsPirate()
+    {
+
+    }
+
     public void GainOneCrew()
     {
         _currentCrew++;

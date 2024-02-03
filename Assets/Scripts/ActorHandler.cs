@@ -33,8 +33,10 @@ public class ActorHandler : MonoBehaviour
     public int ActorIndex => _actorIndex;
     int _totalCoins = 0;
     int _currentCoins = 0;
+    public int Coins => _currentCoins;
     CrewHandler _crewHandler;
-    [SerializeField] bool _isPlayer;
+    bool _isPlayer;
+    [SerializeField] bool _isPirate = false;
     AI_Simple _ai;
 
     public void SetupNewActor(int playerIndex, ActorUIHandler ui, bool isPlayer)
@@ -43,6 +45,42 @@ public class ActorHandler : MonoBehaviour
         _ui = ui;
         _ui.AssignActor(this, playerIndex);
         _isPlayer = isPlayer;
+        _isPirate = false;
+    }
+
+    public void SetupNewPirate(int pirateIndex, TileHandler startingTile)
+    {
+        _actorIndex = pirateIndex + ActorController.Instance.MaxPlayers;
+        _isPirate = true;
+        SetupShip(pirateIndex + ActorController.Instance.MaxPlayers, startingTile);
+        GetComponent<AI_Pirate>().AttachAIToShip();
+
+        switch (pirateIndex)
+        {
+            case 0:
+                _ship.InstallUpgrade(SmithLibrary.SmithType.Cannon);
+                break;
+
+            case 1:
+                _ship.InstallUpgrade(SmithLibrary.SmithType.Cannon);
+                //_ship.InstallUpgrade(SmithLibrary.SmithType.Sails);
+                break;
+
+            case 2:
+                _ship.InstallUpgrade(SmithLibrary.SmithType.Cannon);
+                //_ship.InstallUpgrade(SmithLibrary.SmithType.Cannon);
+                _ship.InstallUpgrade(SmithLibrary.SmithType.Sails);
+                break;
+
+            case 3:
+                _ship.InstallUpgrade(SmithLibrary.SmithType.Cannon);
+                _ship.InstallUpgrade(SmithLibrary.SmithType.Cannon);
+                _ship.InstallUpgrade(SmithLibrary.SmithType.Sails);
+                //_ship.InstallUpgrade(SmithLibrary.SmithType.Sails);
+                break;
+
+        }
+        GetComponent<AI_Pirate>().AttachAIToShip();
     }
 
     public void SetupShip(int playerIndex, TileHandler startingTile)
@@ -53,6 +91,7 @@ public class ActorHandler : MonoBehaviour
             GetComponent<ShipHandler>();
 
         _destination.SetPlayerIndex(playerIndex);
+        Debug.Log("setting up ship at index: " + playerIndex);
         _ship.SetupShip(playerIndex, this);
         _ship.SetDestination(_destination);
         _ship.CargoChanged += HandleCargoChanged;
@@ -64,8 +103,13 @@ public class ActorHandler : MonoBehaviour
         if (!_isPlayer)
         {
             //Debug.Log("tock");
-            _ai = GetComponent<AI_Simple>();
-            _ai.AttachAIToShip();
+
+            if (!_isPirate)
+            {
+                _ai = GetComponent<AI_Simple>();
+                _ai.AttachAIToShip();
+            }
+
         }
     }
 
@@ -78,12 +122,29 @@ public class ActorHandler : MonoBehaviour
 
     private void HandleCrewChanged(int obj)
     {
+        _ship.HandleCrewReturned(obj);
         ActorCrewUpdated?.Invoke(obj);
     }
 
     private void HandleCrewAtZero()
     {
-        ActorController.Instance.DispatchDinghy(_actorIndex);
+        if (_isPirate)
+        {
+            //destroy destination
+            _destination.Destroy();
+            //destroy cannon marker
+            _ship.GetComponentInChildren<CannonHandler>().Destroy();
+            //destroy ship
+            _ship.gameObject.SetActive(false);
+            this.gameObject.SetActive(false);
+            //TODO play a happy, pirate-is-gone sound
+        }
+        else
+        {
+            _ship.HandleZeroCrew();
+            ActorController.Instance.DispatchDinghy(_actorIndex);
+        }
+
     }
 
     private void OnDestroy()

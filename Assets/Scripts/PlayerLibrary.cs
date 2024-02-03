@@ -17,6 +17,7 @@ public class PlayerLibrary : MonoBehaviour
     [SerializeField] Sprite[] _greenSails = null;
     [SerializeField] Sprite[] _redSails = null;
     [SerializeField] Sprite[] _yellowSails = null;
+    [SerializeField] Sprite[] _blackSails = null;
     [SerializeField] Sprite[] _baseShipsByCannon = null;
 
     [SerializeField] AI_Simple _ai = null;
@@ -32,7 +33,7 @@ public class PlayerLibrary : MonoBehaviour
 
     public Color GetPlayerColor(int playerIndex)
     {
-        if (playerIndex < 0) return Color.black;
+        if (playerIndex < 0) return _playerColors[4];
         return _playerColors[playerIndex];
     }
 
@@ -80,6 +81,13 @@ public class PlayerLibrary : MonoBehaviour
                 return _redSails[sailLevel];
             case 3:
                 return _yellowSails[sailLevel];
+
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                //Debug.Log("blacksaid");
+                return _blackSails[sailLevel];
 
             default: return null;
 

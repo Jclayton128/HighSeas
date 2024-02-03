@@ -32,6 +32,7 @@ public class ShipHandler : MonoBehaviour
     public ActorHandler Actor => _actor;
     [SerializeField] TileHandler _currentTile;
     TileHandler _prevTile;
+    public TileHandler Tile => FindCurrentTile();
     Seeker _seeker;
     Path _currentPath;
     DestinationHandler _destinationHandler;
@@ -58,31 +59,33 @@ public class ShipHandler : MonoBehaviour
         _ai = GetComponent<AIPath>();
         _cargoInHold = new List<CargoLibrary.CargoType>();
         _crewHandler = GetComponent<CrewHandler>();
-        _crewHandler.CrewCountAtZero += HandleZeroCrew;
-        _crewHandler.CrewCountChanged += HandleCrewReturned;
+        //_crewHandler.CrewCountAtZero += HandleZeroCrew;
+        //_crewHandler.CrewCountChanged += HandleCrewReturned;
     }
 
 
     private void OnDestroy()
     {
-        _crewHandler.CrewCountAtZero -= HandleZeroCrew;
+        //_crewHandler.CrewCountAtZero -= HandleZeroCrew;
     }
 
-    private void HandleZeroCrew()
+    public void HandleZeroCrew()
     {
         _hasCrew = false;
         _ai.maxSpeed = 0;
+        _cannonHandler.enabled = false;
         gameObject.tag = "Dinghy";
         gameObject.layer = 10;
     }
 
-    private void HandleCrewReturned(int count)
+    public void HandleCrewReturned(int count)
     {
         if (_hasCrew) return;
         _hasCrew = true;
         _ai.maxSpeed = BalanceLibrary.Instance.GetSpeedByCount(_currentSailingLevel);
         gameObject.tag = "Targetable";
         gameObject.layer = 8;
+        _cannonHandler.enabled = true;
     }
 
     private void Start()
@@ -96,6 +99,12 @@ public class ShipHandler : MonoBehaviour
     {
         _actor = handler;
         RenderShip();
+
+        if (index >= ActorController.Instance.MaxPlayers)
+        {
+            //is a pirate
+            //gameObject.tag = "Dinghy";
+        }
     }
 
     private void RenderShip()
@@ -277,12 +286,13 @@ public class ShipHandler : MonoBehaviour
     }                                                                                   
 
 
-    private void FindCurrentTile()
+    private TileHandler FindCurrentTile()
     {
         Vector3 testPos = transform.position;
         testPos.y -= 0.2f;
 
         var hit_0 = Physics2D.OverlapCircle(testPos, 0.1f, Layers.LayerMask_AllTiles);
-        if (hit_0) _currentTile = hit_0.GetComponent<TileHandler>();
+        if (hit_0) return hit_0.GetComponent<TileHandler>();
+        else return null;
     }
 }

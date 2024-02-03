@@ -128,4 +128,9 @@ public class CannonHandler : MonoBehaviour
         }
         
     }
+
+    internal void Destroy()
+    {
+        _targetMarker.gameObject.SetActive(false);
+    }
 }

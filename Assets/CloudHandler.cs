@@ -30,7 +30,7 @@ public class CloudHandler : MonoBehaviour
         float delta = (9- Mathf.Abs(transform.position.y) )/ 4f;
         float dir = Mathf.Sign(transform.position.x);
         _driftTween = transform.DOMoveX(dir * 22, 4f).SetEase(Ease.InSine).SetDelay(delta);
-        _sr.DOFade(0, 3f).SetEase(Ease.OutSine).SetDelay(1.3f);
+        _sr.DOFade(0, 3f).SetEase(Ease.OutSine).SetDelay(1.0f);
     }
 
 }

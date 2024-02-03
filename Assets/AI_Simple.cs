@@ -18,7 +18,7 @@ public class AI_Simple : MonoBehaviour
 
     [SerializeField] bool _isBackingUp = false;
     bool _isBackingUpAgain = false;
-    float _timeForStaticThresholdTest;
+     [SerializeField] float _timeForStaticThresholdTest;
 
     private void Start()
     {
@@ -63,14 +63,14 @@ public class AI_Simple : MonoBehaviour
         if (_cityOfInterest.CheckIfCityWantsAnyCargo(_ship.CargoInHold))
         {
             //do nothing while remaining cargo unloads
-            _timeForStaticThresholdTest = Time.time + _staticTimeThreshold;
+
         }
         else
         {
             _timeForStaticThresholdTest = float.MaxValue;
             FindSetBestLoadCity();
         }
-
+        _timeForStaticThresholdTest = Time.time + _staticTimeThreshold;
     }
 
     private void HandleCargoLoaded()
@@ -78,7 +78,7 @@ public class AI_Simple : MonoBehaviour
         if (_cityOfInterest.ProductionInStock > 0 && _ship.HasFreeCargoSpace)
         {
             //do nothing and wait for load to complete
-            _timeForStaticThresholdTest = Time.time + _staticTimeThreshold;
+
         }
         else
         {
@@ -86,6 +86,7 @@ public class AI_Simple : MonoBehaviour
             _timeForStaticThresholdTest = float.MaxValue;
             FindSetBestSellCity();
         }
+        _timeForStaticThresholdTest = Time.time + _staticTimeThreshold;
     }
 
     private void FindSetBestLoadCity()

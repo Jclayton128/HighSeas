@@ -6,7 +6,7 @@ public class SoundLibrary : MonoBehaviour
 {
     public enum SoundID { CannonFire0, CrewScream1, EnterPort2,
     LoadCargo3, SellCargo4, StartUpgrade5, FinishUpgrade6, WheelCreak7, CrewRevive8,
-    GameOverTriumph9
+    GameOverTriumph9, PirateArrival10
     }
 
     public static SoundLibrary Instance { get; private set; }
@@ -21,6 +21,7 @@ public class SoundLibrary : MonoBehaviour
     [SerializeField] AudioClip[] _wheelCreak = null;
     [SerializeField] AudioClip[] _crewRevive = null;
     [SerializeField] AudioClip[] _gameOverTriumph = null;
+    [SerializeField] AudioClip[] _pirateArrival = null;
 
 
     private void Awake()
@@ -147,6 +148,17 @@ public class SoundLibrary : MonoBehaviour
                 {
                     rand = UnityEngine.Random.Range(0, _gameOverTriumph.Length);
                     return _gameOverTriumph[rand];
+                }
+
+            case SoundID.PirateArrival10:
+                if (forcedIndex >= 0 && forcedIndex < _gameOverTriumph.Length)
+                {
+                    return _pirateArrival[forcedIndex];
+                }
+                else
+                {
+                    rand = UnityEngine.Random.Range(0, _pirateArrival.Length);
+                    return _pirateArrival[rand];
                 }
 
 

@@ -14,7 +14,11 @@ public class GameController : MonoBehaviour
         Option4, Option5, Option6, Option7}
 
     //settings
-    [SerializeField] int _coinsRequiredToWin = 50;
+    [SerializeField] int _coinsRequiredToWin = 75;
+    [SerializeField] int _coinsRequiredToSummonPirate_0 = 20;
+    [SerializeField] int _coinsRequiredToSummonPirate_1 = 35;
+    [SerializeField] int _coinsRequiredToSummonPirate_2 = 50;
+    [SerializeField] int _coinsRequiredToSummonPirate_3 = 60;
     [SerializeField] int _winningActorIndex = -1;
     [SerializeField] string _pressDownToStart = "Press Down";
     [SerializeField] string _leftRightToSelect = "Left/Right To Rotate, Down To Select";
@@ -30,6 +34,11 @@ public class GameController : MonoBehaviour
     public UIController.Context Context => _currentContext;
     [SerializeField] WheelOptions _currentWheelOption = WheelOptions.EnterTutorialGame1;
     public WheelOptions WheelOption => _currentWheelOption;
+    bool _hasSummonedPirate_0 = false;
+    bool _hasSummonedPirate_1 = false;
+    bool _hasSummonedPirate_2 = false;
+    bool _hasSummonedPirate_3 = false;
+
 
     private void Awake()
     {
@@ -202,6 +211,29 @@ public class GameController : MonoBehaviour
             _winningActorIndex = actorIndex;
             EndGame();
         }
+
+        if (playerCurrentCoin > _coinsRequiredToSummonPirate_0 && !_hasSummonedPirate_0)
+        {
+            _hasSummonedPirate_0 = true;
+            ActorController.Instance.SpawnPirate();
+        }
+        if (playerCurrentCoin > _coinsRequiredToSummonPirate_1 && !_hasSummonedPirate_1)
+        {
+            _hasSummonedPirate_1 = true;
+            ActorController.Instance.SpawnPirate();
+        }
+        if (playerCurrentCoin > _coinsRequiredToSummonPirate_2 && !_hasSummonedPirate_2)
+        {
+            _hasSummonedPirate_2 = true;
+            ActorController.Instance.SpawnPirate();
+        }
+        if (playerCurrentCoin > _coinsRequiredToSummonPirate_3 && !_hasSummonedPirate_3)
+        {
+            _hasSummonedPirate_3 = true;
+            ActorController.Instance.SpawnPirate();
+        }
+
+
     }
 
 
